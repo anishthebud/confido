@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 50">
+  <!-- Speech bubble background -->
+  <path 
+    d="M40 10 C40 5, 45 0, 50 0 L190 0 C195 0, 200 5, 200 10 L200 30 C200 35, 195 40, 190 40 L55 40 L40 50 L40 10" 
+    fill="#2563eb" 
+  />
+  
+  <!-- Small circular accent -->
+  <circle cx="25" cy="25" r="15" fill="#1d4ed8"/>
+  
+  <!-- Text -->
+  <text 
+    x="60" 
+    y="28" 
+    font-family="Arial, sans-serif" 
+    font-size="24" 
+    font-weight="bold" 
+    fill="white"
+  >
+    Confido
+  </text>
+  
+  <!-- Growth arrow -->
+  <path 
+    d="M170 25 L180 15 L190 25" 
+    stroke="white" 
+    stroke-width="3" 
+    fill="none" 
+    stroke-linecap="round" 
+    stroke-linejoin="round"
+  />
+</svg>
