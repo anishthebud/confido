@@ -2,7 +2,9 @@
 	import { Input } from '$lib/components';
 	import TextArea from '$lib/components/ui/TextArea.svelte';
 
-	let presentations: [{ thing: number }] = [{ thing: 5 }];
+	let { data } = $props();
+
+	let presentations = $derived(data.presentations);
 </script>
 
 <div class="flex flex-col gap-y-6">
@@ -12,14 +14,15 @@
 
 	<div class="flex flex-col gap-4">
 		<div class="rounded border bg-bg-2 p-6">
-			<div class="flex flex-col gap-y-4">
-				<Input label="Topic" placeholder="Ex: Animals, Star Wars, Anime" />
+			<form method="POST" class="flex flex-col gap-y-4">
+				<Input name="topic" label="Topic" placeholder="Ex: Animals, Star Wars, Anime" />
 				<TextArea
+					name="description"
 					label="Description"
 					placeholder="Ex: The background should be black and the text should be green."
 				/>
-				<button class="btn-primary self-end px-3">Submit</button>
-			</div>
+				<button class="btn-primary self-end px-3" type="submit">Submit</button>
+			</form>
 		</div>
 		<div class="rounded border bg-bg-2 p-6">
 			<div class="flex h-[660px] flex-col gap-y-4 overflow-hidden rounded border">
@@ -32,7 +35,13 @@
 					<tbody>
 						{#each presentations as presentation}
 							<tr>
-								<td>{presentation.thing}</td>
+								<td>{presentation.topic}</td>
+							</tr>
+							<tr>
+								<td>{presentation.description}</td>
+							</tr>
+							<tr>
+								<td>{presentation.created_at}</td>
 							</tr>
 						{/each}
 					</tbody>
