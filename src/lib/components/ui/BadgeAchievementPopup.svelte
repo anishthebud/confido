@@ -88,7 +88,7 @@ in:fade
       class="bg-white text-blue-600 px-8 py-3 rounded-full text-lg hover:bg-blue-50 flex items-center gap-2 mx-auto font-semibold"
       on:click={onShowFeedback}
     >
-      View Feedback 
+      View Feedback
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M9 18l6-6-6-6"/>
       </svg>
