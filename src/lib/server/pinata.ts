@@ -6,3 +6,4 @@ export const pinata = new PinataSDK({
 	pinataJwt: `${PINATA_JWT}`,
 	pinataGateway: `${PUBLIC_GATEWAY_URL}`
 });
+
