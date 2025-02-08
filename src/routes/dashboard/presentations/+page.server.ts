@@ -3,6 +3,7 @@ import Groq from 'groq-sdk';
 import { FAL_KEY, GROQ_KEY } from '$env/static/private';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from '../$types';
+import { groq } from '$lib/server/groq';
 import { presentationSchema } from './schema';
 import { fal } from '@fal-ai/client';
 
@@ -34,11 +35,11 @@ export const actions: Actions = {
 			error(401, 'Unauthorized');
 		}
 
-		const groq = new Groq({ apiKey: GROQ_KEY });
-
 		const formData = await request.formData();
-		const topic = formData.get('topic');
+		const topic = formData.get('topic')?.toString() || '';
 		const description = formData.get('description')?.toString() || '';
+
+		console.log(formData.get('description'), formData);
 
 		const prompt = `You are a presentation slide generator. Generate content for ${topic || 'a topic of your choice'}.
 
@@ -78,7 +79,7 @@ export const actions: Actions = {
             }
             }
         ],
-        "explanation": string (500 words max overview of the topic)
+        "explanation": string (800 words max overview of the topic)
         }
 
         Requirements:
@@ -88,7 +89,7 @@ export const actions: Actions = {
         - Each slide should have multiple text elements and one image element
         - Position elements without overlap
         - Use hierarchical font sizes
-        - Write a clear, concise overview of relevant background information a presenter would need to know in the explanation field
+        - Write a clear overview of relevant background information about the topic in the explanation field. Include talking points and facts that go beyond what is included in the slides.
         - Ensure topic field matches the actual topic being presented
 
         Return only the JSON object with no additional text.`;

@@ -32,8 +32,8 @@
 	{/if}
 	<input
 		id={name}
-		{type}
 		{name}
+		{type}
 		{placeholder}
 		{required}
 		{pattern}
