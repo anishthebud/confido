@@ -1,8 +1,14 @@
 import { redirect, type Actions } from '@sveltejs/kit';
 import Groq from 'groq-sdk';
-import { GROQ_KEY } from '$env/static/private';
+import { FAL_KEY, GROQ_KEY } from '$env/static/private';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from '../$types';
+import { presentationSchema } from './schema';
+import { fal } from '@fal-ai/client';
+
+fal.config({
+	credentials: FAL_KEY
+});
 
 export const load: PageServerLoad = async ({ locals: { supabase, user } }) => {
 	if (user == null) {
@@ -58,8 +64,7 @@ export const actions: Actions = {
                     "type": "text" | "image",
                     "content": {
                     "title": string | null,
-                    "image_url": string | null,
-                    "alt_text": string | null
+                    "alt_text": string | null, (will be used to generate an image using flux image generator, so make it very descriptive.)
                     },
                     "style": {
                     "font_size": number | null,
@@ -79,8 +84,8 @@ export const actions: Actions = {
         Requirements:
         - If no topic provided, choose an educational topic and set it in the topic field
         - Use description "${description}" for styling guidance
-        - Include theme-appropriate colors
-        - Each slide should have at least one text and one image element
+        - Include theme-appropriate colors, and reuse colors whenever possible
+        - Each slide should have multiple text elements and one image element
         - Position elements without overlap
         - Use hierarchical font sizes
         - Write a clear, concise overview of relevant background information a presenter would need to know in the explanation field
@@ -98,8 +103,40 @@ export const actions: Actions = {
 			model: 'llama-3.3-70b-versatile'
 		});
 
-		const slidesAndExplanation = JSON.parse(
-			chatCompletion.choices[0]?.message?.content?.slice(4, -4) || ''
+		const rawResponse = JSON.parse(
+			chatCompletion.choices[0]?.message?.content?.slice(4, -4) || '{}'
+		);
+
+		const result = presentationSchema.safeParse(rawResponse);
+
+		if (!result.success) {
+			console.error('LLM response validation failed:', result.error);
+			error(500, 'Invalid presentation format received from LLM');
+		}
+
+		const slidesAndExplanation = result.data;
+
+		const slides = await Promise.all(
+			slidesAndExplanation.slides.map(async (slide) => ({
+				...slide,
+				content: {
+					...slide.content,
+
+					elements: await Promise.all(
+						slide.content.elements.map(async (element) => {
+							if (element.type === 'text') return element;
+							const image = await fal.run('fal-ai/fast-lightning-sdxl', {
+								input: {
+									prompt: element.content.alt_text || 'an image of your choosing'
+								}
+							});
+							element.content.image_url = image.data.images[0].url;
+
+							return element;
+						})
+					)
+				}
+			}))
 		);
 
 		const presentation = {
@@ -107,12 +144,12 @@ export const actions: Actions = {
 			user_id: user.id,
 			description,
 			topic: slidesAndExplanation.topic,
-			slides: slidesAndExplanation.slides,
+			slides,
 			explanation: slidesAndExplanation.explanation
 		};
 
 		await supabase.from('presentation').insert(presentation);
 
-		redirect(307, `/dashboard/presentations/${presentation.id}`);
+		redirect(303, `/dashboard/presentations/${presentation.id}`);
 	}
 };
