@@ -1,4 +1,4 @@
-import type { PageServerLoad } from './$types';
+import type { PageServerLoad, Actions } from './$types';
 import { error, json } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ locals: { user, supabase }, params }) => {
@@ -12,13 +12,11 @@ export const load: PageServerLoad = async ({ locals: { user, supabase }, params 
 		.eq('id', params.presentationId)
 		.single();
 
-	console.log(dbError);
-
 	if (dbError) {
 		error(500);
 	}
 
-	console.log('hello');
-
 	return { presentation: presentationData };
 };
+
+export const actions: Actions = async () => {};

@@ -27,7 +27,7 @@
 </script>
 
 <div
-	class="fixed mt-14 h-[calc(100%-56px)] w-48 border-r bg-bg-2"
+	class="fixed z-40 mt-14 h-[calc(100%-56px)] w-48 border-r bg-bg-2"
 	transition:fly={{ x: -10, duration: 200 }}
 >
 	<div class="flex h-full w-full flex-col items-center justify-between py-4 text-text-3">
