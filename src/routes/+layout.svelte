@@ -3,7 +3,6 @@
 	import { onMount } from 'svelte';
 	import { Navbar } from '$lib/components';
 	import '../app.css';
-	import { goto } from '$app/navigation';
 	import ThemeProvider from '$lib/components/ThemeProvider.svelte';
 
 	let { data, children } = $props();

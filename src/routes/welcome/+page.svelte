@@ -8,7 +8,7 @@
   <!-- Hero Section -->
   <div class="max-w-6xl mx-auto px-4 py-16">
     <nav class="flex justify-between items-center mb-16">
-      <div class="text-2xl font-bold text-blue-600">Confido</div>
+      <div class="text-6xl font-bold text-blue-600 relative top-20">Confido</div>
       <div class="space-x-6">
       </div>
     </nav>
@@ -29,6 +29,7 @@
         </button>
       </div>
       <div class="bg-white p-6 rounded-2xl shadow-lg">
+      <div class="bg-white p-6 rounded-2xl shadow-lg mr-2">
         <img 
           src={lionAvatar}
           alt="AI Conversation Assistant"
@@ -70,7 +71,7 @@
             svg: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`
           }}
           title="Personalized Growth"
-          description="Track your progress and receive tailored exercises based on your speaking goals."
+          description="Track your progress through earning achievements when accomplishing speaking goals."
         />
       </div>
     </div>
