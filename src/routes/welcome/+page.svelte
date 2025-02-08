@@ -3,8 +3,6 @@
   import { FeatureCard } from "$lib/components";
 </script>
 
-<div class="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-
   <!-- Hero Section -->
   <div class="max-w-6xl mx-auto px-4 py-16">
     <nav class="flex justify-between items-center mb-16">
