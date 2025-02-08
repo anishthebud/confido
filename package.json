@@ -36,6 +36,7 @@
 		"vite": "^5.4.11"
 	},
 	"dependencies": {
+		"@cartesia/cartesia-js": "^2.1.4",
 		"@deepgram/sdk": "^3.10.1",
 		"@fontsource/inter": "^5.1.1",
 		"@fortawesome/fontawesome-svg-core": "^6.7.2",
@@ -52,6 +53,7 @@
 		"layerchart": "^0.74.0",
 		"meyda": "^5.6.3",
 		"pinata": "^1.10.1",
+		"pinata-web3": "^0.5.4",
 		"scribe.js-ocr": "^0.7.0",
 		"svelte-fa": "^4.0.3",
 		"uuid": "^11.0.5",

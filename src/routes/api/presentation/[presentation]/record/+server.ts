@@ -1,11 +1,14 @@
 import { error, json } from '@sveltejs/kit';
 import { z } from 'zod';
 import { createClient } from '@deepgram/sdk';
-import { DEEPGRAM_API_KEY } from '$env/static/private';
+import { CARTESIA_API_KEY, DEEPGRAM_API_KEY } from '$env/static/private';
 import { groq } from '$lib/server/groq';
 import type { RequestHandler } from './$types';
+import { CartesiaClient } from '@cartesia/cartesia-js';
+import { pinata } from '$lib/server/pinata';
 
 export const POST: RequestHandler = async ({ request, params, locals: { supabase } }) => {
+	console.log(params.presentation);
 	const presentation = (await supabase.from('presentation').select().eq('id', params.presentation))
 		?.data?.[0];
 
@@ -45,7 +48,17 @@ export const POST: RequestHandler = async ({ request, params, locals: { supabase
 		generateQuestions(transcript, presentation)
 	] as const);
 
-	return json({ transcript, words, gradingFeedback, uhum_count });
+	const res = await supabase.from('recording').insert({
+		presentation_id: presentation.id,
+		audio_cid: audioCid,
+		transcript,
+		recording_score: gradingFeedback,
+		questions
+	});
+
+	console.log(res);
+
+	return json({ transcript, words, gradingFeedback, uhum_count, questions });
 };
 
 async function getGradingFeedback(transcriptWithTimestamps: string, presentation: any) {
@@ -141,4 +154,43 @@ The transcription service we are using does not have punctuation. Assume the pun
 	console.log(response);
 
 	const questions = schema.parse(JSON.parse(response));
+	const cartesia = new CartesiaClient({
+		apiKey: CARTESIA_API_KEY
+	});
+
+	async function audioFor(text: string) {
+		return new Uint8Array(
+			await cartesia.tts.bytes({
+				voice: {
+					id: 'd18f25ce-1c39-4bda-95d9-b0d937ff7a11',
+					mode: 'id',
+					experimentalControls: {
+						speed: 'slow',
+						emotion: ['curiosity:high', 'positivity:low']
+					}
+				},
+				modelId: 'sonic-english',
+				transcript: text,
+				outputFormat: {
+					container: 'wav',
+					encoding: 'pcm_s16le',
+					sampleRate: 44100
+				}
+			})
+		);
+	}
+
+	return await Promise.all(
+		questions.map(async (q) => {
+			const audio_bytes = await audioFor(q);
+			const res = await pinata.upload.file(
+				new File([audio_bytes], 'question.wav', {
+					type: 'audio/wav',
+					lastModified: Date.now()
+				})
+			);
+
+			return { question_text: q, question_cid: res.IpfsHash };
+		})
+	);
 }
