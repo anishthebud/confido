@@ -16,6 +16,7 @@
 		mediaRecorder = new MediaRecorder(stream);
 		mediaRecorder.ondataavailable = (e) => media.push(e.data);
 	});
+  function handleToggleRecording() {}
 </script>
 
 <div class="flex flex-col gap-y-6">

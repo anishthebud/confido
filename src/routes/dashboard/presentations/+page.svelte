@@ -66,7 +66,7 @@
 								<td>{presentation.description}</td>
 								<td>{new Date(presentation.created_at).toLocaleDateString()}</td>
 								<td>{presentation.slides.length}</td>
-								<td>{presentation.recordings?.count ?? 0}</td>
+								<td>0</td>
 							</tr>
 						{/each}
 					</tbody>

@@ -19,4 +19,4 @@ export const load: PageServerLoad = async ({ locals: { user, supabase }, params 
 	return { presentation: presentationData };
 };
 
-export const actions: Actions = async () => {};
+export const actions: Actions = {};
