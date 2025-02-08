@@ -3,54 +3,15 @@
 
   interface Badge {
     name: string;
-    image: string;
+    image_url: string;
     description: string;
   }
 
-  export let score = 85; // Example score
+  export let score = 805; // Example score
   export let presentationCount = 3; // Example count
   export let onShowFeedback = () => {}; // Function to show feedback popup
-  
-  // Determine which badges earned
-  const earnedBadges: Badge[] = [];
-  
-  // Presentation count badges
-  if (presentationCount >= 1) earnedBadges.push({
-    name: "First Presentation",
-    image: "firstPresentation.png",
-    description: "Completed your first presentation!"
-  });
-  
-  if (presentationCount >= 3) earnedBadges.push({
-    name: "Regular Speaker",
-    image: "threePresentation.png",
-    description: "Completed three presentations!"
-  });
-  
-  if (presentationCount >= 5) earnedBadges.push({
-    name: "Speaking Pro",
-    image: "fivePresentation.png",
-    description: "Completed five or more presentations!"
-  });
-  
-  // Score badges
-  if (score >= 50 && score <= 79) earnedBadges.push({
-    name: "Rising Star",
-    image: "bronzeBadge.png",
-    description: "Scored between 50-79 points!"
-  });
-  
-  if (score >= 80 && score <= 99) earnedBadges.push({
-    name: "Expert Speaker",
-    image: "silverBadge.png",
-    description: "Scored between 80-99 points!"
-  });
-  
-  if (score === 100) earnedBadges.push({
-    name: "Perfect Score",
-    image: "goldBadge.png",
-    description: "Achieved a perfect score of 100!"
-  });
+  export const earnedBadges: Badge[] = [];
+
 </script>
 
 <div 
@@ -76,7 +37,7 @@ in:fade
           in:fly={{ y: 20, duration: 800, delay: 200 }}
         >
           <img 
-            src={badge.image} 
+            src={badge.image_url} 
             alt={badge.name}
             class="w-24 h-24 mx-auto"
           />
@@ -88,7 +49,7 @@ in:fade
       class="bg-white text-blue-600 px-8 py-3 rounded-full text-lg hover:bg-blue-50 flex items-center gap-2 mx-auto font-semibold"
       on:click={onShowFeedback}
     >
-      View Feedback
+      View Feedback 
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M9 18l6-6-6-6"/>
       </svg>

@@ -5,22 +5,22 @@ export type Database = {
 		Tables: {
 			badge: {
 				Row: {
+					description: string | null;
 					id: string;
 					image_url: string | null;
 					name: string | null;
-					user_id: string | null;
 				};
 				Insert: {
+					description?: string | null;
 					id?: string;
 					image_url?: string | null;
 					name?: string | null;
-					user_id?: string | null;
 				};
 				Update: {
+					description?: string | null;
 					id?: string;
 					image_url?: string | null;
 					name?: string | null;
-					user_id?: string | null;
 				};
 				Relationships: [];
 			};
@@ -31,7 +31,7 @@ export type Database = {
 					explanation: string | null;
 					id: string;
 					questions: Json | null;
-					slides: Json | null;
+					slides: Json[];
 					topic: string;
 					user_id: string;
 				};
@@ -41,7 +41,7 @@ export type Database = {
 					explanation?: string | null;
 					id?: string;
 					questions?: Json | null;
-					slides?: Json | null;
+					slides?: Json[];
 					topic: string;
 					user_id: string;
 				};
@@ -51,7 +51,7 @@ export type Database = {
 					explanation?: string | null;
 					id?: string;
 					questions?: Json | null;
-					slides?: Json | null;
+					slides?: Json[];
 					topic?: string;
 					user_id?: string;
 				};
@@ -97,6 +97,32 @@ export type Database = {
 						columns: ['presentation_id'];
 						isOneToOne: false;
 						referencedRelation: 'presentation';
+						referencedColumns: ['id'];
+					}
+				];
+			};
+			usersAndBadges: {
+				Row: {
+					badge_id: string | null;
+					id: number;
+					user_id: string | null;
+				};
+				Insert: {
+					badge_id?: string | null;
+					id?: number;
+					user_id?: string | null;
+				};
+				Update: {
+					badge_id?: string | null;
+					id?: number;
+					user_id?: string | null;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'usersAndBadges_badge_id_fkey';
+						columns: ['badge_id'];
+						isOneToOne: false;
+						referencedRelation: 'badge';
 						referencedColumns: ['id'];
 					}
 				];
