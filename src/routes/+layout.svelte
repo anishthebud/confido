@@ -3,19 +3,10 @@
 	import { onMount } from 'svelte';
 	import { Navbar } from '$lib/components';
 	import '../app.css';
-	import { goto } from '$app/navigation';
 	import ThemeProvider from '$lib/components/ThemeProvider.svelte';
 
 	let { data, children } = $props();
 	let { session, supabase } = $derived(data);
-
-	$effect(() => {
-		if (session) {
-			goto('/dashboard/');
-		} else {
-			goto('/auth/login');
-		}
-	});
 
 	onMount(() => {
 		const { data } = supabase.auth.onAuthStateChange((_, newSession) => {
