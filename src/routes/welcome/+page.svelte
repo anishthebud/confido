@@ -8,7 +8,7 @@
   <!-- Hero Section -->
   <div class="max-w-6xl mx-auto px-4 py-16">
     <nav class="flex justify-between items-center mb-16">
-      <div class="text-2xl font-bold text-blue-600">Confido</div>
+      <div class="text-6xl font-bold text-blue-600 relative top-20">Confido</div>
       <div class="space-x-6">
       </div>
     </nav>
@@ -28,7 +28,7 @@
           </svg>
         </button>
       </div>
-      <div class="bg-white p-6 rounded-2xl shadow-lg">
+      <div class="bg-white p-6 rounded-2xl shadow-lg mr-2">
         <img 
           src={lionAvatar}
           alt="AI Conversation Assistant"
