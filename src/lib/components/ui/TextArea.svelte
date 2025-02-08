@@ -2,13 +2,11 @@
 	import Fa from 'svelte-fa';
 
 	let {
-		type = 'text',
 		name = '',
 		value = $bindable(),
 		placeholder = '',
 		label = '',
 		required = false,
-		pattern = '.*',
 		minlength = 0,
 		maxlength = 524288,
 		disabled = false,
@@ -32,11 +30,9 @@
 	{/if}
 	<textarea
 		id={name}
-		{type}
 		{name}
 		{placeholder}
 		{required}
-		{pattern}
 		{minlength}
 		{maxlength}
 		{disabled}
@@ -45,7 +41,7 @@
 		class="{icon
 			? 'px-8'
 			: 'px-2'} peer h-32 resize-none rounded border-2 bg-bg-1 py-1 text-sm text-text-2 outline-none ring-offset-bg-2 duration-200 placeholder:text-sm focus:ring-2 focus:ring-text-3/30 focus:ring-offset-1"
-	/>
+	></textarea>
 	{#if error}
 		<span class="text-palette-red text-xs">{error}</span>
 	{/if}
