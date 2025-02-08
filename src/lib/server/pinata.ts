@@ -1,4 +1,4 @@
-import { PinataSDK } from 'pinata';
+import { PinataSDK } from 'pinata-web3';
 import { PINATA_JWT } from '$env/static/private';
 import { PUBLIC_GATEWAY_URL } from '$env/static/public';
 
