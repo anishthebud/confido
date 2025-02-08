@@ -2,6 +2,8 @@
 	import { theme } from '$lib/shared';
 	import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
+	import confidoLogo from '$lib/assets/confido-logo.svg'; 
+
 	let { session } = $props();
 
 	let firstSpin = $state(false);
@@ -10,12 +12,7 @@
 	const handleSpinTransition = () => {
 		if (firstSpin) {
 			firstSpin = false;
-			if (theme.value === 'dark') {
-				theme.value = 'light';
-			} else {
-				theme.value = 'dark';
-			}
-
+			theme.value = theme.value === 'dark' ? 'light' : 'dark';
 			secondSpin = true;
 		} else {
 			secondSpin = false;
@@ -26,7 +23,7 @@
 <div class="fixed z-50 h-14 w-full border-b bg-bg-2 py-0.5">
 	<div class="flex h-full items-center justify-between px-4">
 		<a href="/" aria-label="Home">
-      logo
+			<img src="{confidoLogo}" alt="Confido Logo" class="h-10" /> 
 		</a>
 		<div class="flex gap-x-3">
 			{#if !session}
@@ -41,12 +38,12 @@
 					}
 				}}
 				onanimationend={handleSpinTransition}
-				><Fa
-					icon={theme.value === 'dark' ? faSun : faMoon}
-					class="{(firstSpin && 'animate-spin-slow-1') ||
-						(secondSpin && 'animate-spin-slow-2')} aspect-square text-themeicon"
-				/></button
 			>
+				<Fa
+					icon={theme.value === 'dark' ? faSun : faMoon}
+					class="{(firstSpin && 'animate-spin-slow-1') || (secondSpin && 'animate-spin-slow-2')} aspect-square text-themeicon"
+				/>
+			</button>
 		</div>
 	</div>
 </div>
