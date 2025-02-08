@@ -1,4 +1,5 @@
-<script>
-    let { data } = $props;
-</script>
+<script lang="ts">
+	import type { PageServerData } from './$types';
 
+	let { data }: { data: PageServerData } = $props();
+</script>

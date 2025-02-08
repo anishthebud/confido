@@ -32,7 +32,7 @@ export const actions: Actions = {
 
 		const formData = await request.formData();
 		const topic = formData.get('topic');
-		const description = formData.get('description');
+		const description = formData.get('description')?.toString() || '';
 
 		const prompt = `You are a presentation slide generator. Generate content for ${topic || 'a topic of your choice'}.
 
