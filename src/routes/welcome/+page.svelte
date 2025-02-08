@@ -28,6 +28,7 @@
           </svg>
         </button>
       </div>
+      <div class="bg-white p-6 rounded-2xl shadow-lg">
       <div class="bg-white p-6 rounded-2xl shadow-lg mr-2">
         <img 
           src={lionAvatar}
