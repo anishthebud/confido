@@ -97,7 +97,7 @@ Delivery and Confidence (15 points)
 Clarity (10 points)
 Engagement (15 points)
 
-The topic of the slideshow the user presented on is \"${presentation.topic}\". Here is a JSON representation of the slideshow they presented on. ${JSON.stringify(presentation.slides)}
+The topic of the slideshow the user presented on is \"${presentation.topic}\". Here is a JSON representation of the slideshow they presented on. ${JSON.stringify(presentation.slides_simplified)}
 
 Return JSON and only JSON following this zod schema:
 \`\`\`typescript

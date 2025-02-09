@@ -54,8 +54,8 @@
 	</div>
 
 	<div class="flex flex-col gap-4">
-		<div class="flex justify-between gap-4">
-			<div class="rounded border bg-bg-2 p-6">
+		<div class="flex gap-4 justify-between">
+			<div class="p-6 rounded border bg-bg-2">
 				<div class="flex flex-col gap-y-3">
 					<h5>Slides</h5>
 					<button
