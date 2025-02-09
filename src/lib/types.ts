@@ -68,3 +68,8 @@ export interface BankStatement {
 	billInsights: BillInsight[];
 	transactions: Transaction[];
 }
+
+export interface Question {
+	question_cid: string;
+	question_text: string;
+}
