@@ -5,7 +5,6 @@ import type { PageServerLoad } from '../$types';
 import { groq } from '$lib/server/groq';
 import { fal } from '@fal-ai/client';
 import { z } from 'zod';
-import type { SlideSchema } from './schema';
 
 fal.config({
 	credentials: FAL_KEY
@@ -97,11 +96,11 @@ Return only the JSON object with no additional text.
 		});
 
 		const response = chatCompletion.choices[0].message
-		.content!.replaceAll('```json', '')
-		.replaceAll('```', '')
-		.trim();
+			.content!.replaceAll('```json', '')
+			.replaceAll('```', '')
+			.trim();
 
-		const result = presentationSchema.safeParse(response);
+		const result = schema.safeParse(response);
 
 		if (!result.success) {
 			console.error('LLM response validation failed:', result.error);

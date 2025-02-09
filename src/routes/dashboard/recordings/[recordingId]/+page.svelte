@@ -19,5 +19,5 @@
 {/if}
 
 {#if showingFeedback}
-	<FeedbackPopup score={data.scoreInt} feedback={data.comments} />
+	<FeedbackPopup score={data.totalScore} feedback={data.comments} />
 {/if}

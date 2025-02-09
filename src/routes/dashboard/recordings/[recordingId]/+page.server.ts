@@ -16,9 +16,24 @@ export const load = (async ({ params, locals: { supabase, user } }) => {
 
 	const badges = await getBadges(user.id, supabase);
 
+	const questionScore = recording.question_score
+		? Object.entries(recording.question_score)
+				.filter(([key]) => ['depth', 'clarity', 'relevance'].includes(key))
+				.reduce((sum, [_, value]) => sum + (typeof value === 'number' ? value : 0), 0)
+		: 0;
+
+	const recordingScore = recording.recording_score
+		? Object.entries(recording.recording_score)
+				.filter(([key]) => ['pacing', 'clarity', 'delivery', 'engagement'].includes(key))
+				.reduce((sum, [_, value]) => sum + (typeof value === 'number' ? value : 0), 0)
+		: 0;
+
+	const totalScore = questionScore + recordingScore + 20;
+
 	return {
 		recording,
 		comments: (recording.recording_score as any).comments as string,
-		badges
+		badges,
+		totalScore
 	};
 }) satisfies PageServerLoad;
