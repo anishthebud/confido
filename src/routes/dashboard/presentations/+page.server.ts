@@ -92,7 +92,7 @@ Return only the JSON object with no additional text.
 					content: prompt
 				}
 			],
-			model: 'llama-3.3-70b-specdec'
+			model: 'llama-3.3-70b-versatile'
 		});
 
 		const response = chatCompletion.choices[0].message
@@ -100,7 +100,7 @@ Return only the JSON object with no additional text.
 			.replaceAll('```', '')
 			.trim();
 
-		const result = schema.safeParse(response);
+		const result = schema.safeParse(JSON.parse(response));
 
 		if (!result.success) {
 			console.error('LLM response validation failed:', result.error);
