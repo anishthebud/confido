@@ -103,11 +103,12 @@ export const actions: Actions = {
 			model: 'llama-3.3-70b-versatile'
 		});
 
-		const rawResponse = JSON.parse(
-			chatCompletion.choices[0]?.message?.content?.slice(4, -4) || '{}'
-		);
+		const response = chatCompletion.choices[0].message
+		.content!.replaceAll('```json', '')
+		.replaceAll('```', '')
+		.trim();
 
-		const result = presentationSchema.safeParse(rawResponse);
+		const result = presentationSchema.safeParse(response);
 
 		if (!result.success) {
 			console.error('LLM response validation failed:', result.error);

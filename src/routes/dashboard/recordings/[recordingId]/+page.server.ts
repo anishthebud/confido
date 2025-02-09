@@ -1,99 +1,155 @@
 import type { PageServerLoad } from './$types';
 
 export const load = (async ({ params, locals: { supabase, user } }) => {
-	const recordingData = await supabase
-		.from('recording')
-		.select()
-		.eq('recordingId', params.recordingId);
+    if (!user) return;
 
-	const badge_ids: string[] = [];
+    try {
+        // Fetch recording data
+        console.log("🔄 Fetching recording data...");
+        const recordingData = await supabase
+            .from('recording')
+            .select()
+            .eq('recordingId', params.recordingId);
 
-	const scoreFrom = await supabase.from('recording').select().eq('id', params.recordingId).single();
-	if (!scoreFrom.data || !user) {
-		return;
-	}
+        // Fetch score data
+        const scoreFrom = await supabase.from('recording').select().eq('id', params.recordingId).single();
+        if (!scoreFrom.data) return;
 
-	const user_id = user.id;
-	const scoreNum =
-		[
-			...Object.values(scoreFrom.data.question_score || {}),
-			...Object.values(scoreFrom.data.recording_score || {})
-		].reduce((acc, curr) => acc + (typeof curr === 'number' ? curr : 0), 0) + 20;
+        const user_id = user.id;
+        const badge_ids: string[] = [];
 
-	let scoreInt = parseInt(scoreNum);
-	/* Conditional logic for presentations */
-	const { data, count } = await supabase
-		.from('presentation')
-		.select('*', { count: 'exact' })
-		.eq('user_id', user_id);
-	if (count == 5) {
-		badge_ids.push('358fb80c-561c-4987-952d-1619045d2cbd');
-	} else if (count == 3) {
-		badge_ids.push('283b15e8-f1bd-49e8-adbe-25c935b31cbd');
-	} else if (count == 1) {
-		badge_ids.push('df95531c-649c-45e0-af10-b50bd5705c81');
-	}
-	/* Conditional logic for scores */
-	if (scoreInt == 100) {
-		const { data, count } = await supabase
-			.from('recording')
-			.select('*', { count: 'exact' })
-			.eq('score', 100)
-			.eq('user_id', user_id);
-		if (count == 5) {
-			badge_ids.push('ce454cef-2b2b-415c-a075-19f674065b22');
-		} else if (count == 3) {
-			badge_ids.push('05b1653a-b007-4287-a595-8011e2fd5512');
-		} else if (count == 1) {
-			badge_ids.push('c34b8f0a-2677-4ef8-9eb7-b33a828ce529');
-		}
-	} else if (scoreInt >= 80) {
-		const { data, count } = await supabase
-			.from('recording')
-			.select('*', { count: 'exact' })
-			.eq('score', 80)
-			.eq('user_id', user_id);
-		if (count == 5) {
-			badge_ids.push('408811a6-7ff3-4db9-a6ad-4a69d4a50958');
-		} else if (count == 3) {
-			badge_ids.push('72b127a1-ddb8-4039-99f6-e4476d9c51f0');
-		} else if (count == 1) {
-			badge_ids.push('51726161-0a55-4287-a471-9b968f99c82c');
-		}
-	} else if (scoreInt >= 50) {
-		const { data, count } = await supabase
-			.from('recording')
-			.select('*', { count: 'exact' })
-			.gte('score', 50)
-			.eq('user_id', user_id);
-		if (count == 5) {
-			badge_ids.push('a485feb1-7678-4e8b-815d-7ea6e51b87b7');
-		} else if (count == 3) {
-			badge_ids.push('ed75f3e8-5e29-4d75-bd32-404cf046a71d');
-		} else if (count == 1) {
-			badge_ids.push('c66b0d76-778d-4e60-a456-160aad86e466');
-		}
-	}
+        // Log presentation count fetch
+        console.log("🔄 Fetching total presentations count...");
+        const { count: presentationCount, error: presentationError } = await supabase
+            .from('presentation')
+            .select('*', { count: 'exact' })
+            .eq('user_id', user_id);
 
-	interface Badge {
-		name: string;
-		image_url: string;
-		description: string;
-	}
+        if (presentationError) {
+            console.error("❌ Error fetching presentations count:", presentationError);
+            return;
+        }
 
-	const earnedBadges = await Promise.all(
-		badge_ids.map(async (badge_id) => {
-			const { data } = await supabase.from('badge').select().eq('id', badge_id).single();
-			await supabase.from('usersAndBadges').insert([{ user_id: user.id, badge_id: badge_id }]);
-			return data as Badge;
-		})
-	);
+        console.log(`📊 Total Presentations Count: ${presentationCount}`);
 
-	return {
-		recording: recordingData ?? [],
-		earnedBadges,
-		scoreInt,
-		comments: (scoreFrom.data.recording_score as any).comments as string
-	};
+        // Apply presentation badges based on count
+        if (presentationCount === 5) {
+            badge_ids.push('358fb80c-561c-4987-952d-1619045d2cbd');
+            console.log("🏅 Assigned badge for 5 presentations");
+        } else if (presentationCount === 3) {
+            badge_ids.push('283b15e8-f1bd-49e8-adbe-25c935b31cbd');
+            console.log("🏅 Assigned badge for 3 presentations");
+        } else if (presentationCount === 1) {
+            badge_ids.push('df95531c-649c-45e0-af10-b50bd5705c81');
+            console.log("🏅 Assigned badge for 1 presentation");
+        } else {
+            console.log("🔴 No presentation badges assigned");
+        }
+
+        // Log score fetch
+        console.log("🔄 Fetching all scores...");
+        const { data: scoreData, error: scoreError } = await supabase
+            .from('recording')
+            .select('score, created_at')
+            .eq('user_id', user_id);
+
+        if (scoreError) {
+            console.error("❌ Error fetching scores:", scoreError);
+            return;
+        }
+
+        console.log("📈 Score Items:", scoreData);
+
+        // Calculate average score
+        const totalScore = scoreData.reduce((sum, r) => sum + (r.score || 0), 0);
+        const avgScore = totalScore / scoreData.length;
+
+        console.log(`🎯 Average Score: ${avgScore}`);
+
+        // Apply score-based badges
+        if (avgScore >= 100) {
+            badge_ids.push('ce454cef-2b2b-415c-a075-19f674065b22');
+            console.log("🏅 Assigned badge for 100+ average score");
+        } else if (avgScore >= 80) {
+            badge_ids.push('408811a6-7ff3-4db9-a6ad-4a69d4a50958');
+            console.log("🏅 Assigned badge for 80+ average score");
+        } else if (avgScore >= 50) {
+            badge_ids.push('a485feb1-7678-4e8b-815d-7ea6e51b87b7');
+            console.log("🏅 Assigned badge for 50+ average score");
+        } else {
+            console.log("🔴 No score-based badges assigned");
+        }
+
+        // Log badge assignment before filtering
+        console.log(`🏅 Badges Before Filtering: ${badge_ids}`);
+
+        // If no badges were added, log this condition
+        if (badge_ids.length === 0) {
+            console.log("🔴 No badges assigned to badge_ids");
+        }
+
+        // Fetch existing badges assigned to user
+        console.log("🔄 Fetching existing badges...");
+        const { data: existingBadges, error: existingBadgeError } = await supabase
+            .from('usersAndBadges')
+            .select('badge_id')
+            .eq('user_id', user_id);
+
+        if (existingBadgeError) {
+            console.error("❌ Error fetching existing badges:", existingBadgeError);
+            return;
+        }
+
+        const existingBadgeIds = existingBadges?.map((b) => b.badge_id) || [];
+        console.log(`🏅 Existing Badges: ${existingBadgeIds}`);
+
+        // Filter out already assigned badges
+        const newBadgeIds = badge_ids.filter((id) => !existingBadgeIds.includes(id));
+        console.log(`🏅 New Badges to Insert: ${newBadgeIds}`);
+
+        // Insert new badges
+        if (newBadgeIds.length > 0) {
+            console.log("🔄 Inserting new badges...");
+            const { error: insertError } = await supabase.from('usersAndBadges').insert(
+                newBadgeIds.map((badge_id) => ({
+                    user_id: user.id,
+                    badge_id: badge_id
+                }))
+            );
+
+            if (insertError) {
+                console.error("❌ Error inserting badges:", insertError);
+                return;
+            } else {
+                console.log("✅ Badges inserted successfully");
+            }
+        } else {
+            console.log("🔴 No new badges to insert (all badges already assigned)");
+        }
+
+        // Fetch final earned badges
+        console.log("🔄 Fetching final earned badges...");
+        const { data: earnedBadges, error: badgeFetchError } = await supabase
+            .from('badge')
+            .select()
+            .in('id', [...existingBadgeIds, ...newBadgeIds]);
+
+        if (badgeFetchError) {
+            console.error("❌ Error fetching final badges:", badgeFetchError);
+            return;
+        }
+
+        console.log(`🏅 Final Earned Badges: ${earnedBadges}`);
+
+        return {
+            recording: recordingData ?? [],
+            earnedBadges,
+            scoreInt: avgScore,
+            comments: (scoreFrom.data.recording_score as any).comments as string
+        };
+
+    } catch (error) {
+        console.error("❌ Unexpected Error:", error);
+        return;
+    }
 }) satisfies PageServerLoad;
-
