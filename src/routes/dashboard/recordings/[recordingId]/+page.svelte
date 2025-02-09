@@ -1,11 +1,12 @@
-<script>
+<script lang="ts">
 	import { BadgeAchievementPopup } from '$lib/components';
 	import { FeedbackPopup } from '$lib/components';
+	import type { PageProps } from './$types';
 
 	let showingBadges = $state(true);
 	let showingFeedback = $state(false);
 
-	let { data } = $props();
+	let { data }: PageProps = $props();
 
 	function handleShowFeedback() {
 		showingBadges = false;
@@ -14,15 +15,9 @@
 </script>
 
 {#if showingBadges}
-	<BadgeAchievementPopup
-		score={data.scoreInt || 0}
-		presentationCount={3}
-		onShowFeedback={handleShowFeedback}
-		earnedBadges={data.earnedBadges || []}
-	/>
+	<BadgeAchievementPopup onShowFeedback={handleShowFeedback} badges={data.badges} />
 {/if}
 
 {#if showingFeedback}
 	<FeedbackPopup score={data.scoreInt} feedback={data.comments} />
 {/if}
-
