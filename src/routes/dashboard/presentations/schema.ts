@@ -25,13 +25,13 @@ const elementSchema = z.object({
 const slideSchema = z.object({
 	order: z.number(),
 	background: z.object({
-		color: z.string().regex(/^#[0-9A-Fa-f]{6}$/)
+		color: z.string()
 	}),
 	content: z.object({
 		title: z.object({
 			text: z.string(),
 			font_size: z.number(),
-			color: z.string().regex(/^#[0-9A-Fa-f]{6}$/),
+			color: z.string(),
 			position: positionSchema
 		}),
 		elements: z.array(elementSchema)

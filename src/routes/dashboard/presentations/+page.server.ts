@@ -1,6 +1,5 @@
 import { redirect, type Actions } from '@sveltejs/kit';
-import Groq from 'groq-sdk';
-import { FAL_KEY, GROQ_KEY } from '$env/static/private';
+import { FAL_KEY } from '$env/static/private';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from '../$types';
 import { groq } from '$lib/server/groq';
