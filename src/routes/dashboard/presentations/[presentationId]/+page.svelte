@@ -56,13 +56,13 @@
 	</div>
 
 	<div class="flex flex-col gap-4">
-		<div class="flex justify-between gap-4">
-			<div class="rounded border bg-bg-2 p-6">
+		<div class="flex gap-4 justify-between">
+			<div class="p-6 rounded border bg-bg-2">
 				<div class="flex flex-col gap-y-3">
 					<h5>Slides</h5>
 					<button
 						onclick={() => (slideIndex = (slideIndex + 1) % presentation.slides.length)}
-						class="aspect-video h-[440px] cursor-pointer overflow-hidden rounded"
+						class="overflow-hidden rounded cursor-pointer aspect-video h-[440px]"
 					>
 						<Slide slide={presentation.slides[slideIndex]} />
 					</button>
@@ -82,20 +82,20 @@
 					</div>
 				</div>
 			</div>
-			<div class="w-full rounded border bg-bg-2 p-6">
+			<div class="p-6 w-full rounded border bg-bg-2">
 				<div class="flex flex-col gap-y-3">
 					<h5>Explanation</h5>
-					<p class="h-[560px] overflow-y-scroll">
+					<p class="overflow-y-scroll h-[560px]">
 						{presentation.explanation}
 					</p>
 				</div>
 			</div>
 		</div>
-		<div class="flex justify-between gap-4">
-			<div class="w-full rounded border bg-bg-2 p-3">
+		<div class="flex gap-4 justify-between">
+			<div class="p-3 w-full rounded border bg-bg-2">
 				<AudioWave {audioStream} {isRecording} />
 			</div>
-			<div class=" w-1/4 min-w-64 rounded border bg-bg-2 p-3">
+			<div class="p-3 w-1/3 rounded border bg-bg-2">
 				<form
 					method="post"
 					enctype="multipart/form-data"
@@ -114,7 +114,7 @@
 							await update();
 						};
 					}}
-					class="flex h-full w-full items-center justify-between gap-x-3"
+					class="flex gap-x-3 justify-between items-center w-full h-full"
 				>
 					<button
 						class="flex h-8 cursor-pointer items-center gap-x-2 rounded px-3 text-sm font-semibold text-white duration-200 {isRecording
@@ -128,7 +128,7 @@
 					</button>
 
 					<button
-						class="btn-secondary px-3"
+						class="px-3 btn-secondary"
 						type="submit"
 						disabled={media.length == 0 || isRecording || loading}
 					>
