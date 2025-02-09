@@ -29,6 +29,8 @@
 			{#if !session}
 				<a href="/auth/login" class="btn-primary h-8 px-3">Login</a>
 				<a href="/auth/sign-up" class="btn-secondary h-8 px-3">Sign Up</a>
+			{:else}
+				<a href="/dashboard/profile" class="btn-primary h-8 px-3">Dashboard</a>
 			{/if}
 			<button
 				class="flex aspect-square h-8 items-center justify-center rounded hover:bg-btn-hover"

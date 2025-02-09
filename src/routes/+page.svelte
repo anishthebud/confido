@@ -9,7 +9,7 @@
 <div>
 	<div class="flex flex-col">
 		<div
-			class="grid h-[100vh] items-center bg-gradient-to-b from-transparent via-purple-600/80 to-transparent to-100% px-32 md:grid-cols-2"
+			class="grid h-[100vh] items-center bg-gradient-to-b from-transparent from-5% via-indigo-600 to-transparent px-32 md:grid-cols-2"
 		>
 			<div class="flex flex-col gap-y-6 text-white">
 				<h1 class="mb-2 text-5xl font-bold">
@@ -48,7 +48,7 @@
 					></div>
 				</a>
 			</div>
-			<div class="mb-96 flex w-full items-center justify-center">
+			<div class="flex w-full items-center justify-center">
 				<div class="relative">
 					<div
 						class="absolute -inset-4 animate-pulse rounded-full bg-gradient-to-r from-purple-400 via-indigo-400 to-purple-400 opacity-75 blur-lg"
