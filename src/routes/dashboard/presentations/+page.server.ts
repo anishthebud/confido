@@ -5,6 +5,7 @@ import type { PageServerLoad } from '../$types';
 import { groq } from '$lib/server/groq';
 import { fal } from '@fal-ai/client';
 import { z } from 'zod';
+import type { SlideSchema } from './schema';
 
 fal.config({
 	credentials: FAL_KEY
@@ -17,8 +18,9 @@ export const load: PageServerLoad = async ({ locals: { supabase, user } }) => {
 
 	const { data: presentationData, error: dbError } = await supabase
 		.from('presentation')
-		.select()
+		.select('*, recording(*)')
 		.eq('user_id', user.id)
+		.order('created_at', { ascending: false })
 		.limit(10);
 
 	if (dbError) {

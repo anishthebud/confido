@@ -45,3 +45,4 @@ export const presentationSchema = z.object({
 });
 
 export type PresentationSchema = z.infer<typeof presentationSchema>;
+export type SlideSchema = z.infer<typeof slideSchema>;
