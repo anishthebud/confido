@@ -3,8 +3,8 @@ import { FAL_KEY } from '$env/static/private';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from '../$types';
 import { groq } from '$lib/server/groq';
-import { presentationSchema } from './schema';
 import { fal } from '@fal-ai/client';
+import { z } from 'zod';
 
 fal.config({
 	credentials: FAL_KEY
@@ -40,58 +40,47 @@ export const actions: Actions = {
 
 		console.log(formData.get('description'), formData);
 
+		const schema = z.object({
+			slides: z.array(
+				z.object({
+					title: z.string(),
+					bullets: z.array(z.string()).min(1).max(3),
+					bgcolor: z.string(),
+					textcolor: z.string(),
+					image_description: z.string()
+				})
+			),
+			talkingPoints: z.string()
+		});
+
 		const prompt = `You are a presentation slide generator. Generate content for ${topic || 'a topic of your choice'}.
 
-        Return a JSON object with exactly this structure:
-        {
-        "topic": string (the topic you're presenting about),
-        "slides": [
-            {
-            "order": number,
-            "background": {
-                "color": string (hex color)
-            },
-            "content": {
-                "title": {
-                "text": string,
-                "font_size": number,
-                "color": string (hex color),
-                "position": { "x": 0-100, "y": 0-100 }
-                },
-                "elements": [
-                {
-                    "order": number,
-                    "type": "text" | "image",
-                    "content": {
-                    "title": string | null,
-                    "alt_text": string | null, (will be used to generate an image using flux image generator, so make it very descriptive.)
-                    },
-                    "style": {
-                    "font_size": number | null,
-                    "color": string | null,
-                    "width": number,
-                    "height": number
-                    },
-                    "position": { "x": 0-100, "y": 0-100 }
-                }
-                ]
-            }
-            }
-        ],
-        "explanation": string (800 words max overview of the topic)
-        }
+Each slide will have 1-3 bullet points, and an AI Generated Image. There should be between 3-6 slides in each slideshow.
 
-        Requirements:
-        - If no topic provided, choose an educational topic and set it in the topic field
-        - Use description "${description}" for styling guidance
-        - Include theme-appropriate colors, and reuse colors whenever possible
-        - Each slide should have multiple text elements and one image element
-        - Position elements without overlap
-        - Use hierarchical font sizes
-        - Write a clear overview of relevant background information about the topic in the explanation field. Include talking points and facts that go beyond what is included in the slides.
-        - Ensure topic field matches the actual topic being presented
+Return data according to this zod schema.
 
-        Return only the JSON object with no additional text.`;
+const schema = z.object({
+  slides: z.array(
+    z.object({
+      title: z.string(),
+      bullets: z.array(z.string()).min(1).max(3),
+      bgcolor: z.string(), // hex
+      textcolor: z.string(), // hex
+      image_description: z.string() // make this very descriptive as it will be fed directly to stable diffusion.
+    })
+  ),
+  talkingPoints: z.string()
+});
+
+Requirements:
+- If no topic provided, choose an educational topic and set it in the topic field
+- Use description "${description}" for styling guidance
+- Include theme-appropriate colors and keep the amount of total colors low. Also make sure the text color is readable on the background.
+- Write a clear overview of relevant background information about the topic in the explanation field. Include talking points and facts that go beyond what is included in the slides.
+- Ensure topic field matches the actual topic being presented
+
+Return only the JSON object with no additional text.
+`;
 
 		const chatCompletion = await groq.chat.completions.create({
 			messages: [
@@ -100,56 +89,113 @@ export const actions: Actions = {
 					content: prompt
 				}
 			],
-			model: 'llama-3.3-70b-versatile'
+			model: 'llama-3.3-70b-specdec'
 		});
 
-		const rawResponse = JSON.parse(
-			chatCompletion.choices[0]?.message?.content?.slice(4, -4) || '{}'
+		console.log(
+			chatCompletion.choices[0]?.message?.content
+				?.replaceAll('```json', '')
+				?.replaceAll('```', '')
+				?.trim()
 		);
 
-		const result = presentationSchema.safeParse(rawResponse);
+		const rawResponse = JSON.parse(
+			chatCompletion.choices[0]?.message?.content
+				?.replaceAll('```json', '')
+				?.replaceAll('```', '')
+				?.trim() || '{}'
+		);
+
+		const result = schema.safeParse(rawResponse);
 
 		if (!result.success) {
 			console.error('LLM response validation failed:', result.error);
 			error(500, 'Invalid presentation format received from LLM');
 		}
 
-		const slidesAndExplanation = result.data;
+		const { slides, talkingPoints } = result.data;
 
-		const slides = await Promise.all(
-			slidesAndExplanation.slides.map(async (slide) => ({
-				...slide,
-				content: {
-					...slide.content,
+		const slidesWithImages = await Promise.all(
+			slides.map(async (slide) => {
+				const image = await fal.run('fal-ai/fast-lightning-sdxl', {
+					input: {
+						prompt: slide.image_description || 'an image of your choosing'
+					}
+				});
 
-					elements: await Promise.all(
-						slide.content.elements.map(async (element) => {
-							if (element.type === 'text') return element;
-							const image = await fal.run('fal-ai/fast-lightning-sdxl', {
-								input: {
-									prompt: element.content.alt_text || 'an image of your choosing'
-								}
-							});
-							element.content.image_url = image.data.images[0].url;
-
-							return element;
-						})
-					)
-				}
-			}))
+				return { ...slide, image_url: image.data.images[0].url };
+			})
 		);
 
-		const presentation = {
-			id: crypto.randomUUID(),
+		const oldslides = slidesWithImages.map((slide, slideIndex) => ({
+			order: slideIndex + 1,
+			background: {
+				color: slide.bgcolor
+			},
+			content: {
+				title: {
+					text: slide.title,
+					font_size: 42,
+					color: slide.textcolor,
+					position: {
+						x: 6,
+						y: 4
+					}
+				},
+				elements: [
+					{
+						order: 1,
+						type: 'image',
+						content: {
+							title: null,
+							alt_text: slide.image_description,
+							image_url: slide.image_url
+						},
+						style: {
+							font_size: null,
+							color: null,
+							width: 40,
+							height: 40
+						},
+						position: {
+							x: 30,
+							y: 23
+						}
+					},
+					...slide.bullets.map((bullet, index) => ({
+						order: index + 2, // Start from 2 since image is 1
+						type: 'text' as const,
+						content: {
+							title: bullet,
+							alt_text: null,
+							image_url: null
+						},
+						style: {
+							font_size: 16,
+							color: slide.textcolor,
+							width: 100,
+							height: 5
+						},
+						position: {
+							x: 6,
+							y: 65 + index * 12
+						}
+					}))
+				]
+			}
+		}));
+
+		const id = crypto.randomUUID();
+		await supabase.from('presentation').insert({
+			id,
 			user_id: user.id,
 			description,
-			topic: slidesAndExplanation.topic,
-			slides,
-			explanation: slidesAndExplanation.explanation
-		};
+			topic,
+			slides: oldslides,
+			slides_simplified: slides,
+			explanation: talkingPoints
+		});
 
-		await supabase.from('presentation').insert(presentation);
-
-		redirect(303, `/dashboard/presentations/${presentation.id}`);
+		redirect(303, `/dashboard/presentations/${id}`);
 	}
 };
