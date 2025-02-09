@@ -48,7 +48,7 @@
 					></div>
 				</a>
 			</div>
-			<div class="flex w-full items-center justify-center">
+			<div class="mb-96 flex w-full items-center justify-center">
 				<div class="relative">
 					<div
 						class="absolute -inset-4 animate-pulse rounded-full bg-gradient-to-r from-purple-400 via-indigo-400 to-purple-400 opacity-75 blur-lg"
@@ -71,7 +71,7 @@
 			<div class="left-1/2 h-0.5 w-1/2 bg-border"></div>
 		</div>
 
-		<div class="mt-32 flex flex-col gap-y-8 px-32">
+		<div class="mb-32 mt-32 flex flex-col gap-y-8 px-32">
 			<h3 class="text-center text-text-1">Why Choose Confido?</h3>
 
 			<div class="grid grid-cols-1 gap-8 md:grid-cols-3">
