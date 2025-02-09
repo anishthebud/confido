@@ -44,21 +44,23 @@
 				</div>
 			</div>
 			<div class="w-full min-w-64 gap-y-3 overflow-y-scroll rounded border bg-bg-2 p-6">
-				<div class="flex flex-col gap-y-3">
+				<div class="flex h-full flex-col gap-y-3">
 					<h5>Questions</h5>
 					<form
 						class="flex h-full flex-col justify-between gap-y-8"
 						enctype="multipart/form-data"
 						method="post"
 					>
-						{#each questions as question, i}
-							<Question
-								text={question.question_text}
-								cid={question.question_cid}
-								form_name="audio{i}"
-								on_record={() => console.log((is_recorded[i] = true))}
-							/>
-						{/each}
+						<div class="flex flex-col gap-y-6">
+							{#each questions as question, i}
+								<Question
+									text={question.question_text}
+									cid={question.question_cid}
+									form_name="audio{i}"
+									on_record={() => console.log((is_recorded[i] = true))}
+								/>
+							{/each}
+						</div>
 
 						<button type="submit" class="btn-primary" disabled={!is_recorded.every(Boolean)}
 							>Submit</button

@@ -84,8 +84,8 @@
 			</div>
 			<div class="p-6 w-full rounded border bg-bg-2">
 				<div class="flex flex-col gap-y-3">
-					<h5>Explanation</h5>
-					<p class="overflow-y-scroll h-[560px]">
+					<h5>Talking Points</h5>
+					<p class="h-[560px] overflow-y-scroll">
 						{presentation.explanation}
 					</p>
 				</div>
@@ -132,7 +132,21 @@
 						type="submit"
 						disabled={media.length == 0 || isRecording || loading}
 					>
-						Submit
+						{#if loading}
+							<svg class="h-5 w-5 animate-spin text-text-3" viewBox="0 0 24 24">
+								<path
+									class="fill-current"
+									d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,19a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z"
+									opacity=".25"
+								/>
+								<path
+									class="fill-current"
+									d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z"
+								/>
+							</svg>
+						{:else}
+							Submit
+						{/if}
 					</button>
 				</form>
 			</div>

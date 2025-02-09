@@ -66,6 +66,11 @@
 		--btn-hover: 65, 65, 65;
 	}
 
+	text,
+	tspan {
+		@apply fill-text-3;
+	}
+
 	hr {
 		@apply border-border;
 	}

@@ -9,8 +9,7 @@ interface ScoreItem {
 
 export const load = (async ({ locals: { user, supabase } }) => {
 	if (!user) {
-		console.log('No user found, throwing unauthorized error');
-		throw error(401, 'Unauthorized');
+		error(401, 'Unauthorized');
 	}
 
 	const presentations = await supabase

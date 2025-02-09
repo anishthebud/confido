@@ -21,12 +21,30 @@
 	});
 
 	const calendarData = days.map((date) => {
-		const dateStr = date.toISOString().split('T')[0];
 		return {
-			date: dateStr,
-			value: data.scoreItems.filter(
-				(item) => new Date(item.created_at).toISOString().split('T')[0] === dateStr
-			).length
+			date,
+			value: data.scoreItems.filter((item) => {
+				const itemDate = new Date(item.created_at);
+				if (
+					itemDate.getFullYear() === date.getFullYear() &&
+					itemDate.getMonth() === date.getMonth() &&
+					itemDate.getDate() === date.getDate()
+				) {
+					console.log(
+						itemDate,
+						date,
+						itemDate.getFullYear() === date.getFullYear() &&
+							itemDate.getMonth() === date.getMonth() &&
+							itemDate.getDate() === date.getDate()
+					);
+				}
+
+				return (
+					itemDate.getFullYear() === date.getFullYear() &&
+					itemDate.getMonth() === date.getMonth() &&
+					itemDate.getDate() === date.getDate()
+				);
+			}).length
 		};
 	});
 </script>
@@ -143,38 +161,44 @@
 					<div class="grid grid-cols-2 gap-4 md:grid-cols-5">
 						{#each earnedBadges as badge}
 							<div
-								class="flex flex-col items-center rounded-lg bg-gradient-to-br from-purple-50 to-blue-50 p-4 transition-colors hover:from-purple-100 hover:to-blue-100"
+								class="flex flex-col items-center rounded border-2 border-transparent p-2 duration-200 hover:border-blue-500"
 							>
 								<img src={badge.imageUrl} alt={badge.description} />
-								<div class="text-center text-sm font-medium text-gray-700">{badge.name}</div>
+								<div class="text-center text-sm font-medium text-text-1">{badge.name}</div>
 							</div>
 						{/each}
 					</div>
 				{/if}
 			</div>
 		</div>
-		<div class="rounded border bg-bg-2 p-6">
+		<div class="self-start rounded border bg-bg-2 p-6">
 			<div class="flex flex-col gap-y-3">
 				<h5>Activity Calendar</h5>
-				<div class="flex h-[200px] items-center justify-center overflow-hidden rounded p-4">
+				<div class="h-[200px] p-4">
 					<Chart
-						data={calendarData ?? []}
+						data={calendarData}
 						x="date"
 						c="value"
-						cDomain={[0, 1, 2, 3, 4]}
-						cRange={['#f4f4f5', '#c084fc', '#a855f7', '#9333ea', '#7e22ce']}
+						cDomain={[0, 1, 2, 4, 8]}
+						cRange={[
+							'transparent',
+							'#93c5fd', // light blue
+							'#60a5fa', // blue
+							'#2563eb', // medium blue
+							'#1e40af' // dark blue
+						]}
 						let:tooltip
-						padding={{ top: 20, right: 20, bottom: 20, left: -5 }}
+						padding={{ top: 20, right: 20, bottom: 20, left: 0 }}
 					>
 						<Svg>
 							<Calendar
 								start={firstDayOfYear}
 								end={lastDayOfYear}
 								{tooltip}
-								cellSize={16}
-								monthPath
-								cellPadding={2}
-								class="fill-transparent stroke-border/60"
+								monthPath={{
+									class: 'stroke-border'
+								}}
+								class=" stroke-border/30"
 							/>
 						</Svg>
 

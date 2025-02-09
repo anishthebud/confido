@@ -71,21 +71,18 @@
 		}
 	}
 
-	let percentage: number = $state(0);
+	let percentage = $state(0);
 
 	function handleTimeUpdate() {
 		if (audio) {
 			percentage = (audio.currentTime / audio.duration) * 100;
 		}
-		if (percentage == 100) {
-			isPlaying = false;
-		}
 	}
 </script>
 
-<div class="flex flex-col gap-y-4">
+<div class="flex flex-col gap-y-3">
 	<div class="relative h-1 w-full bg-border/40">
-		<div class="absolute h-full bg-blue-500 duration-500" style="width: {percentage}%"></div>
+		<div class="absolute h-full bg-blue-500" style="width: {percentage}%"></div>
 	</div>
 	<p>{text}</p>
 	<div class="flex items-center justify-between">
