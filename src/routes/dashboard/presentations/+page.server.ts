@@ -55,7 +55,7 @@ export const actions: Actions = {
 
 		const prompt = `You are a presentation slide generator. Generate slide content for ${providedTopic || 'a completely random topic'} and 2000 character long talking points.
 
-Each slide will have 1-3 bullet points, and an AI Generated Image. There should be between 3-6 slides in each slideshow.
+Each slide will have 1-3 bullet points, and an AI Generated Image. There should be 4 slides in each slideshow.
 
 Return data according to this zod schema.
 

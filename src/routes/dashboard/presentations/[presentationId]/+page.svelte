@@ -67,7 +67,7 @@
 						<Slide slide={presentation.slides[slideIndex]} />
 					</button>
 					<div class="grid grid-cols-4 gap-3">
-						{#each presentation.slides.slice(presentation.slides.length > 4 ? Math.max(slideIndex - 1, 0) : 0, slideIndex + 4) as slide, i}
+						{#each presentation.slides.slice(0, 4) as slide, i}
 							<button
 								class="aspect-video w-full overflow-hidden rounded {slideIndex == i
 									? 'ring-2 ring-orange-400'
