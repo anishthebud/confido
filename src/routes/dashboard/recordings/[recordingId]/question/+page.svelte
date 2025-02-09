@@ -17,13 +17,13 @@
 	</div>
 
 	<div class="flex flex-col gap-4">
-		<div class="flex gap-4 justify-between">
-			<div class="p-6 rounded border bg-bg-2">
+		<div class="flex justify-between gap-4">
+			<div class="rounded border bg-bg-2 p-6">
 				<div class="flex flex-col gap-y-3">
 					<h5>Slides</h5>
 					<button
 						onclick={() => (slideIndex = (slideIndex + 1) % presentation.slides.length)}
-						class="overflow-hidden rounded cursor-pointer aspect-video h-[460px]"
+						class="aspect-video h-[460px] cursor-pointer overflow-hidden rounded"
 					>
 						<Slide slide={presentation.slides[slideIndex]} />
 					</button>
@@ -43,20 +43,28 @@
 					</div>
 				</div>
 			</div>
-			<div class="overflow-y-scroll p-6 w-full rounded border bg-bg-2">
-				<form class="flex flex-col gap-y-8" enctype="multipart/form-data" method="post">
-					{#each questions as question, i}
-						<Question
-							text={question.question_text}
-							cid={question.question_cid}
-							form_name="audio{i}"
-							on_record={() => console.log((is_recorded[i] = true))}
-						/>
-					{/each}
+			<div class="w-full min-w-64 gap-y-3 overflow-y-scroll rounded border bg-bg-2 p-6">
+				<div class="flex flex-col gap-y-3">
+					<h5>Questions</h5>
+					<form
+						class="flex h-full flex-col justify-between gap-y-8"
+						enctype="multipart/form-data"
+						method="post"
+					>
+						{#each questions as question, i}
+							<Question
+								text={question.question_text}
+								cid={question.question_cid}
+								form_name="audio{i}"
+								on_record={() => console.log((is_recorded[i] = true))}
+							/>
+						{/each}
 
-					<button type="submit" class="py-16" disabled={!is_recorded.every(Boolean)}>Submit</button>
-					{JSON.stringify(is_recorded)}
-				</form>
+						<button type="submit" class="btn-primary" disabled={!is_recorded.every(Boolean)}
+							>Submit</button
+						>
+					</form>
+				</div>
 			</div>
 		</div>
 	</div>

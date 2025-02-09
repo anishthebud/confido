@@ -4,21 +4,30 @@
 	import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 	import { curves } from '$lib/assets';
 	import Fa from 'svelte-fa';
-	import { scale } from 'svelte/transition';
 </script>
 
-<div class="min-h-screen bg-gradient-to-br from-purple-600 via-indigo-600 to-purple-800">
-	<img class="absolute -z-50 h-full w-full opacity-20 mix-blend-soft-light" alt="curves" src={curves} />
-	<div class="flex flex-col px-8 py-16 md:px-32">
-		<div class="grid h-[80vh] items-center md:grid-cols-2">
+<div>
+	<div class="flex flex-col">
+		<div
+			class="grid h-[100vh] items-center bg-gradient-to-b from-transparent via-purple-600/80 to-transparent to-100% px-32 md:grid-cols-2"
+		>
 			<div class="flex flex-col gap-y-6 text-white">
 				<h1 class="mb-2 text-5xl font-bold">
-					<span class="text-white">Boost Your</span> <span class="relative">
-						<span class="relative z-10 bg-gradient-to-r from-yellow-400 to-yellow-400 bg-clip-text px-1.5 pb-2 text-transparent">
+					<span class="text-white">Boost Your</span>
+					<span class="relative">
+						<span
+							class="relative z-10 bg-gradient-to-r from-yellow-400 to-yellow-400 bg-clip-text px-1.5 pb-2 text-transparent"
+						>
 							Speaking Skills
 						</span>
 						<span class="absolute bottom-0 left-0 -z-10 h-3 w-full bg-white/20 blur-sm"></span>
-					</span> <span class="text-white">with</span> <span class="bg-gradient-to-r from-yellow-400 to-yellow-400 bg-clip-text text-transparent">Confido,</span> <span class="text-white">your personal</span> <span class="bg-gradient-to-r from-yellow-400 to-yellow-400 bg-clip-text text-transparent">AI speech coach</span>
+					</span> <span class="text-white">with</span>
+					<span class="bg-gradient-to-r from-yellow-400 to-yellow-400 bg-clip-text text-transparent"
+						>Confido,</span
+					> <span class="text-white">your personal</span>
+					<span class="bg-gradient-to-r from-yellow-400 to-yellow-400 bg-clip-text text-transparent"
+						>AI speech coach</span
+					>
 				</h1>
 				<p class="text-lg text-white/80">
 					Practice conversations with Confido to get personalized feedback to become a more
@@ -29,15 +38,24 @@
 					class="btn group relative w-fit overflow-hidden rounded-lg bg-white px-6 py-3 font-semibold text-purple-700 transition-all hover:scale-105 hover:shadow-lg"
 				>
 					<span class="relative z-10 flex items-center gap-2">
-						Get Started <Fa icon={faArrowRight} class="transition-transform group-hover:translate-x-1" />
+						Get Started <Fa
+							icon={faArrowRight}
+							class="transition-transform group-hover:translate-x-1"
+						/>
 					</span>
-					<div class="absolute inset-0 -z-0 bg-gradient-to-r from-purple-200 to-indigo-200 opacity-0 transition-opacity group-hover:opacity-100"></div>
+					<div
+						class="absolute inset-0 -z-0 bg-gradient-to-r from-purple-200 to-indigo-200 opacity-0 transition-opacity group-hover:opacity-100"
+					></div>
 				</a>
 			</div>
 			<div class="flex w-full items-center justify-center">
 				<div class="relative">
-					<div class="absolute -inset-4 animate-pulse rounded-full bg-gradient-to-r from-purple-400 via-indigo-400 to-purple-400 opacity-75 blur-lg"></div>
-					<div class="absolute -inset-4 animate-pulse rounded-full bg-gradient-to-r from-indigo-400 via-purple-400 to-indigo-400 opacity-75 blur-lg animation-delay-1000"></div>
+					<div
+						class="absolute -inset-4 animate-pulse rounded-full bg-gradient-to-r from-purple-400 via-indigo-400 to-purple-400 opacity-75 blur-lg"
+					></div>
+					<div
+						class="animation-delay-1000 absolute -inset-4 animate-pulse rounded-full bg-gradient-to-r from-indigo-400 via-purple-400 to-indigo-400 opacity-75 blur-lg"
+					></div>
 					<img
 						src={lionAvatar}
 						alt="AI Conversation Assistant"
@@ -49,8 +67,12 @@
 			</div>
 		</div>
 
-		<div class="mt-32 flex flex-col gap-y-8">
-			<h3 class="text-center text-3xl font-bold text-white">Why Choose Confido?</h3>
+		<div class="mt-12 flex w-full items-center justify-center">
+			<div class="left-1/2 h-0.5 w-1/2 bg-border"></div>
+		</div>
+
+		<div class="mt-32 flex flex-col gap-y-8 px-32">
+			<h3 class="text-center text-text-1">Why Choose Confido?</h3>
 
 			<div class="grid grid-cols-1 gap-8 md:grid-cols-3">
 				<FeatureCard
@@ -78,22 +100,3 @@
 		</div>
 	</div>
 </div>
-
-<style>
-	.animation-delay-1000 {
-		animation-delay: -1000ms;
-	}
-
-	/* Add a subtle texture overlay */
-	.bg-gradient-to-br::before {
-		content: '';
-		position: absolute;
-		top: 0;
-		right: 0;
-		bottom: 0;
-		left: 0;
-		background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.1'/%3E%3C/svg%3E");
-		opacity: 0.15;
-		pointer-events: none;
-	}
-</style>

@@ -2,7 +2,7 @@
 	import { theme } from '$lib/shared';
 	import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
-	import confidoLogo from '$lib/assets/confido-logo.svg'; 
+	import confidoLogo from '$lib/assets/confido-logo.svg';
 
 	let { session } = $props();
 
@@ -20,10 +20,10 @@
 	};
 </script>
 
-<div class="fixed z-50 h-14 w-full border-b bg-bg-2 py-0.5">
+<div class="fixed z-50 h-14 w-full border-b bg-bg-2 py-0.5 backdrop-blur">
 	<div class="flex h-full items-center justify-between px-4">
 		<a href="/" aria-label="Home">
-			<img src="{confidoLogo}" alt="Confido Logo" class="h-10" /> 
+			<img src={confidoLogo} alt="Confido Logo" class="h-10" />
 		</a>
 		<div class="flex gap-x-3">
 			{#if !session}
@@ -41,7 +41,8 @@
 			>
 				<Fa
 					icon={theme.value === 'dark' ? faSun : faMoon}
-					class="{(firstSpin && 'animate-spin-slow-1') || (secondSpin && 'animate-spin-slow-2')} aspect-square text-themeicon"
+					class="{(firstSpin && 'animate-spin-slow-1') ||
+						(secondSpin && 'animate-spin-slow-2')} aspect-square text-themeicon"
 				/>
 			</button>
 		</div>

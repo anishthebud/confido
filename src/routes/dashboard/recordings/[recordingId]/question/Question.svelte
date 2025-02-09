@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { faMicrophone, faPlayCircle } from '@fortawesome/free-solid-svg-icons';
+	import { faMicrophone, faPause, faPlay, faPlayCircle } from '@fortawesome/free-solid-svg-icons';
 	import { onMount } from 'svelte';
 	import Fa from 'svelte-fa';
 
@@ -15,6 +15,8 @@
 
 	let media = $state([] as Blob[]);
 	let mediaRecorder: MediaRecorder | null = null;
+
+	let isPlaying: boolean = $state(false);
 
 	onMount(async () => {
 		try {
@@ -42,8 +44,8 @@
 	});
 
 	let isRecording = $state(false);
+
 	function handleToggleRecording(e: any) {
-		console.log(e);
 		if (!mediaRecorder) {
 			return;
 		}
@@ -58,23 +60,47 @@
 
 		isRecording = !isRecording;
 	}
+
+	function handleTogglePlaying() {
+		if (isPlaying) {
+			audio?.pause();
+			isPlaying = false;
+		} else {
+			audio?.play();
+			isPlaying = true;
+		}
+	}
+
+	let percentage: number = $state(0);
+
+	function handleTimeUpdate() {
+		if (audio) {
+			percentage = (audio.currentTime / audio.duration) * 100;
+		}
+		if (percentage == 100) {
+			isPlaying = false;
+		}
+	}
 </script>
 
 <div class="flex flex-col gap-y-4">
+	<div class="relative h-1 w-full bg-border/40">
+		<div class="absolute h-full bg-blue-500 duration-500" style="width: {percentage}%"></div>
+	</div>
 	<p>{text}</p>
-	<div class="flex flex-row justify-between">
+	<div class="flex items-center justify-between">
 		<button
 			type="button"
-			onclick={() => audio?.play()}
-			class="text-2xl text-blue-500 hover:text-blue-700"
+			onclick={handleTogglePlaying}
+			class="flex h-9 w-9 items-center justify-center rounded-full bg-blue-500 text-white duration-200 hover:bg-blue-600"
 		>
-			<Fa icon={faPlayCircle} />
+			<Fa icon={isPlaying ? faPause : faPlay} />
 		</button>
 
 		<button
-			class="flex h-10 flex-row items-center justify-center gap-x-4 rounded-full px-4 text-text-4 duration-200 hover:scale-105 {isRecording
-				? 'bg-green-500'
-				: 'bg-red-500'}"
+			class="flex h-8 cursor-pointer items-center gap-x-2 rounded px-3 text-sm font-semibold text-white duration-200 {isRecording
+				? 'bg-red-500 hover:bg-red-400'
+				: 'bg-green-500 hover:bg-green-400'}"
 			onclick={handleToggleRecording}
 			type="button"
 		>
@@ -84,4 +110,8 @@
 	</div>
 </div>
 <input type="file" name={form_name} bind:this={input} hidden />
-<audio src="https://gateway.pinata.cloud/ipfs/{cid}" bind:this={audio}></audio>
+<audio
+	src="https://gateway.pinata.cloud/ipfs/{cid}"
+	bind:this={audio}
+	ontimeupdate={handleTimeUpdate}
+></audio>
