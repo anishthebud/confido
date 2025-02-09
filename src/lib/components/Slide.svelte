@@ -26,18 +26,18 @@
 	use:updateBaseSize
 >
 	<div
-		class="absolute w-full"
-		style:left="{slide.content.title.position.x}%"
-		style:top="{slide.content.title.position.y}%"
+		class="absolute w-full text-start font-bold"
+		style:left="6%"
+		style:top="4%"
 		style:color={slide.content.title.color}
-		style:font-size="{(slide.content.title.font_size * baseSize) / 4}px"
+		style:font-size="{(42 * baseSize) / 4}px"
 	>
 		{slide.content.title.text}
 	</div>
 
 	{#each slide.content.elements as element (element.order)}
 		<div
-			class="absolute"
+			class="absolute text-start"
 			style:left="{element.position.x}%"
 			style:top="{element.position.y}%"
 			style:width="{element.style.width}%"

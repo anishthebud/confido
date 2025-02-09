@@ -31,6 +31,7 @@ export type Database = {
 					explanation: string | null;
 					id: string;
 					slides: Json[];
+					slides_simplified: Json[];
 					topic: string;
 					user_id: string;
 				};
@@ -40,6 +41,7 @@ export type Database = {
 					explanation?: string | null;
 					id?: string;
 					slides?: Json[];
+					slides_simplified?: Json[];
 					topic: string;
 					user_id: string;
 				};
@@ -49,6 +51,7 @@ export type Database = {
 					explanation?: string | null;
 					id?: string;
 					slides?: Json[];
+					slides_simplified?: Json[];
 					topic?: string;
 					user_id?: string;
 				};
