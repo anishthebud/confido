@@ -2,6 +2,8 @@
 	import { goto } from '$app/navigation';
 	import { Input, TextArea } from '$lib/components';
 	import { page } from '$app/state';
+	import { formatDistance } from 'date-fns';
+	import { enhance } from '$app/forms';
 
 	let { data } = $props();
 
@@ -11,14 +13,6 @@
 	let description = '';
 
 	let loading: boolean = $state(false);
-
-	$effect(() => {
-		if (page.form?.submitting) {
-			loading = true;
-		} else {
-			loading = false;
-		}
-	});
 </script>
 
 <div class="flex flex-col gap-y-6">
@@ -28,7 +22,17 @@
 
 	<div class="flex flex-col gap-4">
 		<div class="rounded border bg-bg-2 p-6">
-			<form method="POST" class="flex flex-col gap-y-4">
+			<form
+				method="POST"
+				use:enhance={() => {
+					loading = true;
+					return async ({ update }) => {
+						loading = false;
+						update();
+					};
+				}}
+				class="flex flex-col gap-y-4"
+			>
 				<Input
 					value={topic}
 					name="topic"
@@ -51,9 +55,9 @@
 						<tr>
 							<th>Topic</th>
 							<th>Description</th>
-							<th>Created At</th>
-							<th>Number of Slides</th>
-							<th>Number of Recordings</th>
+							<th>Created</th>
+							<th># Slides</th>
+							<th># Recordings</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -64,9 +68,13 @@
 							>
 								<td>{presentation.topic}</td>
 								<td>{presentation.description}</td>
-								<td>{new Date(presentation.created_at).toLocaleDateString()}</td>
+								<td
+									>{formatDistance(new Date(presentation.created_at), new Date(), {
+										addSuffix: true
+									})}</td
+								>
 								<td>{presentation.slides.length}</td>
-								<td>0</td>
+								<td>{presentation.recording.length}</td>
 							</tr>
 						{/each}
 					</tbody>

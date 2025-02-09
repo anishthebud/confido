@@ -2,12 +2,8 @@
     import { LineChart } from 'layerchart';
     import { onMount } from 'svelte';
 
-    let { data } = $props();
-    const currentDateTime = '2022-10-15';
-
-    onMount(() => {
-        console.log("✅ Component Mounted. Data:", data);
-    });
+	let { data } = $props();
+	const currentDateTime = '2022-10-15';
 </script>
 
 <div class="p-8 min-h-screen bg-gradient-to-br from-purple-50 to-blue-50">
