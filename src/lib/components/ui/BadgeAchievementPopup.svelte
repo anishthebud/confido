@@ -1,23 +1,15 @@
 <script lang="ts">
+	import { BADGES, type BadgeLevel, type BadgeType } from '$lib/badges/badges';
 	import { fade, fly } from 'svelte/transition';
 
-	interface Badge {
-		name: string;
-		image_url: string;
-		description: string;
-	}
-
 	const {
-		score,
-		presentationCount,
 		onShowFeedback,
-		earnedBadges
-	}: {
-		score: number;
-		presentationCount: number;
-		onShowFeedback: () => void;
-		earnedBadges: Badge[];
-	} = $props();
+		badges
+	}: { onShowFeedback: () => void; badges: Record<BadgeType, BadgeLevel> } = $props();
+
+	const earnedBadges = $derived(
+		Object.entries(badges).flatMap(([k, v]) => (v ? [BADGES[k as BadgeType][v]] : []))
+	);
 </script>
 
 <div class="flex fixed inset-0 z-50 justify-center items-center bg-black/50" in:fade>
@@ -35,7 +27,7 @@
 						class="p-4 rounded-xl transition-transform transform hover:scale-105 bg-white/10 backdrop-blur-sm"
 						in:fly={{ y: 20, duration: 800, delay: 200 }}
 					>
-						<img src={badge.image_url} alt={badge.name} class="mx-auto w-24 h-24" />
+						<img src={badge.imageUrl} alt={badge.name} class="mx-auto w-24 h-24" />
 					</div>
 				{/each}
 			</div>
@@ -62,4 +54,3 @@
 		</div>
 	</div>
 </div>
-
