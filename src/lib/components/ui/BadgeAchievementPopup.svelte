@@ -1,59 +1,65 @@
 <script lang="ts">
-  import { fade, fly } from 'svelte/transition';
+	import { fade, fly } from 'svelte/transition';
 
-  interface Badge {
-    name: string;
-    image_url: string;
-    description: string;
-  }
+	interface Badge {
+		name: string;
+		image_url: string;
+		description: string;
+	}
 
-  export let score = 805; // Example score
-  export let presentationCount = 3; // Example count
-  export let onShowFeedback = () => {}; // Function to show feedback popup
-  export const earnedBadges: Badge[] = [];
-
+	const {
+		score,
+		presentationCount,
+		onShowFeedback,
+		earnedBadges
+	}: {
+		score: number;
+		presentationCount: number;
+		onShowFeedback: () => void;
+		earnedBadges: Badge[];
+	} = $props();
 </script>
 
-<div 
-class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
-in:fade
->
-<div 
-  class="bg-gradient-to-b from-purple-600 to-blue-600 rounded-2xl p-8 max-w-2xl w-full mx-4 text-white shadow-2xl"
-  in:fly={{ y: 20, duration: 800 }}
->
-  <div class="text-center">
-    <h1 class="text-4xl font-bold text-yellow-300 mb-2 animate-bounce">
-      🎉 Congratulations! 🎉
-    </h1>
-    <p class="text-xl font-bold text-blue-100 mb-8">
-      You have earned the following badges:
-    </p>
-    
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-6 mb-8">
-      {#each earnedBadges as badge}
-        <div 
-          class="bg-white/10 backdrop-blur-sm rounded-xl p-4 transform hover:scale-105 transition-transform"
-          in:fly={{ y: 20, duration: 800, delay: 200 }}
-        >
-          <img 
-            src={badge.image_url} 
-            alt={badge.name}
-            class="w-24 h-24 mx-auto"
-          />
-        </div>
-      {/each}
-    </div>
-    
-    <button 
-      class="bg-white text-blue-600 px-8 py-3 rounded-full text-lg hover:bg-blue-50 flex items-center gap-2 mx-auto font-semibold"
-      on:click={onShowFeedback}
-    >
-      View Feedback 
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M9 18l6-6-6-6"/>
-      </svg>
-    </button>
-  </div>
+<div class="flex fixed inset-0 z-50 justify-center items-center bg-black/50" in:fade>
+	<div
+		class="p-8 mx-4 w-full max-w-2xl text-white bg-gradient-to-b from-purple-600 to-blue-600 rounded-2xl shadow-2xl"
+		in:fly={{ y: 20, duration: 800 }}
+	>
+		<div class="text-center">
+			<h1 class="mb-2 text-4xl font-bold text-yellow-300 animate-bounce">🎉 Congratulations! 🎉</h1>
+			<p class="mb-8 text-xl font-bold text-blue-100">You have earned the following badges:</p>
+
+			<div class="grid grid-cols-2 gap-6 mb-8 md:grid-cols-3">
+				{#each earnedBadges as badge}
+					<div
+						class="p-4 rounded-xl transition-transform transform hover:scale-105 bg-white/10 backdrop-blur-sm"
+						in:fly={{ y: 20, duration: 800, delay: 200 }}
+					>
+						<img src={badge.image_url} alt={badge.name} class="mx-auto w-24 h-24" />
+					</div>
+				{/each}
+			</div>
+
+			<button
+				class="flex gap-2 items-center py-3 px-8 mx-auto text-lg font-semibold text-blue-600 bg-white rounded-full hover:bg-blue-50"
+				onclick={onShowFeedback}
+			>
+				View Feedback
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="20"
+					height="20"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				>
+					<path d="M9 18l6-6-6-6" />
+				</svg>
+			</button>
+		</div>
+	</div>
 </div>
-</div>
+

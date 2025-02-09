@@ -6,7 +6,7 @@
 	let { data }: PageProps = $props();
 	let presentation = $derived(data.presentation);
 	let questions = $derived(data.recording.questions);
-	let is_recorded = $state(questions.map(() => false));
+	let is_recorded = $state(data.recording.questions.map(() => false));
 
 	let slideIndex: number = $state(0);
 </script>

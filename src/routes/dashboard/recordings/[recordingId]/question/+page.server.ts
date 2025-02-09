@@ -82,7 +82,7 @@ export const actions = {
 			.from('recording')
 			.update({
 				question_score: feedback,
-				answers: files
+				answers: files as any
 			})
 			.eq('id', params.recordingId);
 

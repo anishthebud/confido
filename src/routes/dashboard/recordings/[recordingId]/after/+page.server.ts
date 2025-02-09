@@ -14,10 +14,11 @@ export const load = (async ({ params, locals: { supabase, user } }) => {
 	}
 
 	const user_id = user.id;
-	const scoreNum = [
-		...Object.values(scoreFrom.data.question_score || {}),
-		...Object.values(scoreFrom.data.recording_score || {})
-	].reduce((acc, curr) => acc + (typeof curr === 'number' ? curr : 0), 0) + 20;
+	const scoreNum =
+		[
+			...Object.values(scoreFrom.data.question_score || {}),
+			...Object.values(scoreFrom.data.recording_score || {})
+		].reduce((acc, curr) => acc + (typeof curr === 'number' ? curr : 0), 0) + 20;
 
 	let scoreInt = parseInt(scoreNum);
 	/* Conditional logic for presentations */
@@ -80,16 +81,19 @@ export const load = (async ({ params, locals: { supabase, user } }) => {
 		description: string;
 	}
 
-	const earnedBadges = await Promise.all (badge_ids.map(async (badge_id) => {
-		const { data } = await supabase.from('badge').select().eq('id', badge_id).single();
-		await supabase.from('usersAndBadges').insert([{user_id: user.id, badge_id: badge_id}]);
-		return data as Badge;
-	}));
+	const earnedBadges = await Promise.all(
+		badge_ids.map(async (badge_id) => {
+			const { data } = await supabase.from('badge').select().eq('id', badge_id).single();
+			await supabase.from('usersAndBadges').insert([{ user_id: user.id, badge_id: badge_id }]);
+			return data as Badge;
+		})
+	);
 
-	return {,
+	return {
 		recording: recordingData ?? [],
 		earnedBadges,
 		scoreInt,
 		comments: (scoreFrom.data.recording_score as any).comments as string
 	};
 }) satisfies PageServerLoad;
+

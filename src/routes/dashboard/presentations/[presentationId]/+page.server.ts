@@ -76,7 +76,7 @@ export const actions: Actions = {
 				transcript,
 				recording_score: gradingFeedback,
 				questions,
-				words
+				words: words as any
 			})
 			.select();
 
