@@ -86,6 +86,7 @@ export const load = (async ({ params, locals: { supabase, user } }) => {
 
 	const earnedBadges = await Promise.all (badge_ids.map(async (badge_id) => {
 		const { data } = await supabase.from('badge').select().eq('id', badge_id).single();
+		await supabase.from('usersAndBadges').insert([{user_id: user.id, badge_id: badge_id}]);
 		return data as Badge;
 	}));
 
