@@ -15,7 +15,7 @@ export const load = (async ({ params, locals: { supabase, user } }) => {
 		.single();
 
 	if (!data) throw error(404);
-	if (data?.question_score) redirect(307, `/dashboard/recordings/${params.recordingId}/`);
+	if (data?.question_score) redirect(303, `/dashboard/recordings/${params.recordingId}/`);
 
 	return {
 		presentation: data.presentation,

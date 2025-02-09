@@ -18,7 +18,7 @@
 	$effect(() => {
 		yPosition = (() => {
 			const path = page.url.pathname;
-			if (path.includes('/dashboard/account')) return '0px';
+			if (path.includes('/dashboard/profile')) return '0px';
 			if (path.includes('/dashboard/recordings')) return '44px';
 			if (path.includes('/dashboard/presentations')) return '97px';
 			return '70px';
@@ -50,9 +50,9 @@
 					style="top: {yPosition}"
 				></div>
 				<a
-					href="/dashboard/account"
+					href="/dashboard/profile"
 					class="flex w-full items-center gap-x-2 px-4 py-2 text-sm font-medium duration-200 {page.url.pathname.includes(
-						'/dashboard/account'
+						'/dashboard/profile'
 					)
 						? ' bg-blue-400/10 text-blue-400'
 						: ' hover:text-text-1'}"><Fa class="w-4" icon={faUser} />Account</a
