@@ -96,14 +96,12 @@ Return only the JSON object with no additional text.
 			model: 'llama-3.3-70b-specdec'
 		});
 
-		const rawResponse = JSON.parse(
-			chatCompletion.choices[0]?.message?.content
-				?.replaceAll('```json', '')
-				?.replaceAll('```', '')
-				?.trim() || '{}'
-		);
+		const response = chatCompletion.choices[0].message
+		.content!.replaceAll('```json', '')
+		.replaceAll('```', '')
+		.trim();
 
-		const result = schema.safeParse(rawResponse);
+		const result = presentationSchema.safeParse(response);
 
 		if (!result.success) {
 			console.error('LLM response validation failed:', result.error);
