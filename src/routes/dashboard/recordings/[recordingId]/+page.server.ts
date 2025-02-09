@@ -28,12 +28,13 @@ export const load = (async ({ params, locals: { supabase, user } }) => {
 				.reduce((sum, [_, value]) => sum + (typeof value === 'number' ? value : 0), 0)
 		: 0;
 
-	const totalScore = questionScore + recordingScore + 20;
+	const totalScore = ((questionScore + recordingScore) * 100) / 80;
 
 	return {
 		recording,
 		comments: (recording.recording_score as any).comments as string,
 		badges,
-		totalScore
+		totalScore,
+		params
 	};
 }) satisfies PageServerLoad;

@@ -9,7 +9,8 @@ export const load: PageServerLoad = async ({ locals: { supabase, user } }) => {
 	const { data: presentationsData, error: dbError } = await supabase
 		.from('presentation')
 		.select(`*, recording(*)`)
-		.eq('user_id', user.id);
+		.eq('user_id', user.id)
+		.order('created_at', { ascending: false });
 
 	console.log(presentationsData);
 	const recordingsData = presentationsData?.flatMap((presentation) => {

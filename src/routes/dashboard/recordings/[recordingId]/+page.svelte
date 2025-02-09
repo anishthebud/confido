@@ -12,6 +12,7 @@
 		showingBadges = false;
 		showingFeedback = true;
 	}
+	$inspect(data.params);
 </script>
 
 {#if showingBadges}
@@ -19,5 +20,9 @@
 {/if}
 
 {#if showingFeedback}
-	<FeedbackPopup score={data.totalScore} feedback={data.comments} />
+	<FeedbackPopup
+		score={data.totalScore}
+		feedback={data.comments}
+		recordingId={data.params.recordingId}
+	/>
 {/if}

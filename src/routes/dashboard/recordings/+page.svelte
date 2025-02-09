@@ -47,7 +47,7 @@
 					{#each recordings || [] as recording}
 						<tr
 							class="cursor-pointer duration-200 hover:bg-neutral-400/10"
-							onclick={() => goto(`/dashboard/recordings/${recording.id}`)}
+							onclick={() => goto(`/dashboard/recordings/${recording.id}/view`)}
 						>
 							<td>{new Date(recording.created_at).toLocaleDateString()}</td>
 							<td

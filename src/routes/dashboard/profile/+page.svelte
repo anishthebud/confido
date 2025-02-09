@@ -179,7 +179,7 @@
 						data={calendarData}
 						x="date"
 						c="value"
-						cDomain={[0, 1, 2, 4, 8]}
+						cDomain={Array.from({ length: 21 }, (_, i) => i)}
 						cRange={[
 							'transparent',
 							'#93c5fd', // light blue

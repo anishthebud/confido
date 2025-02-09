@@ -162,7 +162,7 @@ The transcription service we are using does not have punctuation. Assume the pun
 				content: transcript
 			}
 		],
-		model: 'llama-3.3-70b-versatile',
+		model: 'llama-3.3-70b-specdec',
 		temperature: 1,
 		max_completion_tokens: 2048
 	});

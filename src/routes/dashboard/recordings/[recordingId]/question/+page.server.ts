@@ -140,9 +140,13 @@ The following will be the question, asked by the AI, and then the users answer, 
 						},
 						{ role: 'system', content: transcript }
 					] as const
-			)
+			),
+			{
+				role: 'system',
+				content: `Generate ONLY valid json.`
+			}
 		],
-		model: 'llama-3.3-70b-versatile',
+		model: 'llama-3.3-70b-specdec',
 		temperature: 1,
 		max_completion_tokens: 2048
 	});
