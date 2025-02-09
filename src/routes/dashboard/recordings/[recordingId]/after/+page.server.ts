@@ -1,14 +1,10 @@
 import type { PageServerLoad } from './$types';
 
 export const load = (async ({ params, locals: { supabase, user } }) => {
-	const presentationData = await supabase
-		.from('presentation')
-		.select()
-		.eq('id', params.presentationId);
 	const recordingData = await supabase
 		.from('recording')
 		.select()
-		.eq('presentationId', params.presentationId);
+		.eq('recordingId', params.recordingId);
 
 	const badge_ids: string[] = [];
 
@@ -90,8 +86,7 @@ export const load = (async ({ params, locals: { supabase, user } }) => {
 		return data as Badge;
 	}));
 
-	return {
-		presentation: presentationData ?? [],
+	return {,
 		recording: recordingData ?? [],
 		earnedBadges,
 		scoreInt,
