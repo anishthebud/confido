@@ -3,6 +3,7 @@
 	import { Input, TextArea } from '$lib/components';
 	import { page } from '$app/state';
 	import { formatDistance } from 'date-fns';
+	import { enhance } from '$app/forms';
 
 	let { data } = $props();
 
@@ -12,14 +13,6 @@
 	let description = '';
 
 	let loading: boolean = $state(false);
-
-	$effect(() => {
-		if (page.form?.submitting) {
-			loading = true;
-		} else {
-			loading = false;
-		}
-	});
 </script>
 
 <div class="flex flex-col gap-y-6">
@@ -28,8 +21,18 @@
 	</div>
 
 	<div class="flex flex-col gap-4">
-		<div class="p-6 rounded border bg-bg-2">
-			<form method="POST" class="flex flex-col gap-y-4">
+		<div class="rounded border bg-bg-2 p-6">
+			<form
+				method="POST"
+				use:enhance={() => {
+					loading = true;
+					return async ({ update }) => {
+						loading = false;
+						update();
+					};
+				}}
+				class="flex flex-col gap-y-4"
+			>
 				<Input
 					value={topic}
 					name="topic"
@@ -42,11 +45,11 @@
 					label="Description"
 					placeholder="Ex: The background should be black and the text should be green."
 				/>
-				<button disabled={loading} class="self-end px-3 btn-primary" type="submit">Submit</button>
+				<button disabled={loading} class="btn-primary self-end px-3" type="submit">Submit</button>
 			</form>
 		</div>
-		<div class="p-6 rounded border bg-bg-2">
-			<div class="flex overflow-hidden flex-col gap-y-4 rounded border h-[448px]">
+		<div class="rounded border bg-bg-2 p-6">
+			<div class="flex h-[448px] flex-col gap-y-4 overflow-hidden rounded border">
 				<table class="w-full divide-border">
 					<thead>
 						<tr>
@@ -60,7 +63,7 @@
 					<tbody>
 						{#each presentations as presentation}
 							<tr
-								class="duration-200 cursor-pointer hover:bg-neutral-400/10"
+								class="cursor-pointer duration-200 hover:bg-neutral-400/10"
 								onclick={() => goto(`/dashboard/presentations/${presentation.id}`)}
 							>
 								<td>{presentation.topic}</td>

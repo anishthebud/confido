@@ -37,10 +37,8 @@ export const actions: Actions = {
 		}
 
 		const formData = await request.formData();
-		const topic = formData.get('topic')?.toString() || '';
-		const description = formData.get('description')?.toString() || '';
-
-		console.log(formData.get('description'), formData);
+		const providedTopic = formData.get('topic')?.toString() || '';
+		const providedDescription = formData.get('description')?.toString() || '';
 
 		const schema = z.object({
 			slides: z.array(
@@ -52,10 +50,11 @@ export const actions: Actions = {
 					image_description: z.string()
 				})
 			),
-			talkingPoints: z.string()
+			talkingPoints: z.string(),
+			topic: z.string()
 		});
 
-		const prompt = `You are a presentation slide generator. Generate content for ${topic || 'a topic of your choice'}.
+		const prompt = `You are a presentation slide generator. Generate slide content for ${providedTopic || 'a completely random topic'} and 2000 character long talking points.
 
 Each slide will have 1-3 bullet points, and an AI Generated Image. There should be between 3-6 slides in each slideshow.
 
@@ -71,15 +70,18 @@ const schema = z.object({
       image_description: z.string() // make this very descriptive as it will be fed directly to stable diffusion.
     })
   ),
-  talkingPoints: z.string()
+  talkingPoints: z.string(),
+  topic: z.string(),
 });
 
 Requirements:
-- If no topic provided, choose an educational topic and set it in the topic field
-- Use description "${description}" for styling guidance
+- If no topic provided, choose an educational topic and set it in the topic field, otherwhise, use the topic that was provided.
+- Use description "${providedDescription}" for styling guidance
 - Include theme-appropriate colors and keep the amount of total colors low. Also make sure the text color is readable on the background.
 - Write a clear overview of relevant background information about the topic in the explanation field. Include talking points and facts that go beyond what is included in the slides.
+- The explanation field should be at least 2000 characters long.
 - Ensure topic field matches the actual topic being presented
+- Make the background color the same for all slides unless the user specifies otherwise
 
 Return only the JSON object with no additional text.
 `;
@@ -93,13 +95,6 @@ Return only the JSON object with no additional text.
 			],
 			model: 'llama-3.3-70b-specdec'
 		});
-
-		console.log(
-			chatCompletion.choices[0]?.message?.content
-				?.replaceAll('```json', '')
-				?.replaceAll('```', '')
-				?.trim()
-		);
 
 		const rawResponse = JSON.parse(
 			chatCompletion.choices[0]?.message?.content
@@ -115,7 +110,7 @@ Return only the JSON object with no additional text.
 			error(500, 'Invalid presentation format received from LLM');
 		}
 
-		const { slides, talkingPoints } = result.data;
+		const { slides, talkingPoints, topic } = result.data;
 
 		const slidesWithImages = await Promise.all(
 			slides.map(async (slide) => {
@@ -191,7 +186,7 @@ Return only the JSON object with no additional text.
 		await supabase.from('presentation').insert({
 			id,
 			user_id: user.id,
-			description,
+			description: providedDescription,
 			topic,
 			slides: oldslides,
 			slides_simplified: slides,

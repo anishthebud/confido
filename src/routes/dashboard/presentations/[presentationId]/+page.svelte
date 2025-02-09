@@ -46,6 +46,8 @@
 
 		isRecording = !isRecording;
 	}
+
+	let loading: boolean = $state(false);
 </script>
 
 <div class="flex flex-col gap-y-6">
@@ -54,8 +56,8 @@
 	</div>
 
 	<div class="flex flex-col gap-4">
-		<div class="flex gap-4 justify-between">
-			<div class="p-6 rounded border bg-bg-2">
+		<div class="flex justify-between gap-4">
+			<div class="rounded border bg-bg-2 p-6">
 				<div class="flex flex-col gap-y-3">
 					<h5>Slides</h5>
 					<button
@@ -98,8 +100,8 @@
 					method="post"
 					enctype="multipart/form-data"
 					use:enhance={({ formData }) => {
-						console.log(isRecording);
 						if (media.length === 0) return;
+						loading = true;
 
 						const audioBlob = new Blob(media, { type: 'audio/webm' });
 						const audioFile = new File([audioBlob], 'recording.webm');
@@ -107,6 +109,7 @@
 						formData.append('audio', audioFile);
 
 						return async ({ update }) => {
+							loading = false;
 							media = [];
 							await update();
 						};
@@ -127,7 +130,7 @@
 					<button
 						class="btn-secondary px-3"
 						type="submit"
-						disabled={media.length == 0 || isRecording}
+						disabled={media.length == 0 || isRecording || loading}
 					>
 						Submit
 					</button>

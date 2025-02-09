@@ -2,28 +2,23 @@
 	import { LineChart } from 'layerchart';
 
 	let { data } = $props();
+	let user = $derived(data.user);
 	const currentDateTime = '2022-10-15';
+	console.log(user);
 </script>
 
 <div class="flex flex-col gap-y-6">
 	<div class="flex flex-col gap-y-4">
-		<h4>Present</h4>
+		<div class="flex items-center gap-x-2">
+			<h4>
+				Welcome <span class="text-blue-500">
+					{user?.user_metadata?.display_name ?? 'Guest'}
+				</span>
+			</h4>
+		</div>
+		<p>{user?.email}</p>
 	</div>
 	<div class="mx-auto max-w-6xl space-y-6">
-		<div class="mb-8 flex items-center justify-between">
-			<div class="flex items-center space-x-4">
-				<div
-					class="flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-r from-purple-500 to-blue-500 text-4xl text-white"
-				>
-					{String(data.scoreItems).slice(0, 2).toUpperCase()}
-				</div>
-				<div>
-					<h1 class="text-3xl font-bold text-gray-800">{data.users_name}</h1>
-					<p class="text-sm text-gray-500">Last updated: {currentDateTime}</p>
-				</div>
-			</div>
-		</div>
-
 		<div class="grid grid-cols-1 gap-6 md:grid-cols-3">
 			<div class="rounded-lg bg-white p-6 shadow-sm">
 				<div class="mb-4 flex items-center space-x-2">
