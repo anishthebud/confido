@@ -5,13 +5,15 @@
 	const currentDateTime = '2022-10-15';
 </script>
 
-<div class="p-8 min-h-screen bg-gradient-to-br from-purple-50 to-blue-50">
-	<div class="mx-auto space-y-6 max-w-6xl">
-		<!-- Header Section -->
-		<div class="flex justify-between items-center mb-8">
+<div class="flex flex-col gap-y-6">
+	<div class="flex flex-col gap-y-4">
+		<h4>Present</h4>
+	</div>
+	<div class="mx-auto max-w-6xl space-y-6">
+		<div class="mb-8 flex items-center justify-between">
 			<div class="flex items-center space-x-4">
 				<div
-					class="flex justify-center items-center w-24 h-24 text-4xl text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-full"
+					class="flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-r from-purple-500 to-blue-500 text-4xl text-white"
 				>
 					{String(data.scoreItems).slice(0, 2).toUpperCase()}
 				</div>
@@ -22,12 +24,11 @@
 			</div>
 		</div>
 
-		<!-- Stats Overview -->
 		<div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-			<div class="p-6 bg-white rounded-lg shadow-sm">
-				<div class="flex items-center mb-4 space-x-2">
+			<div class="rounded-lg bg-white p-6 shadow-sm">
+				<div class="mb-4 flex items-center space-x-2">
 					<svg
-						class="w-6 h-6 text-purple-500"
+						class="h-6 w-6 text-purple-500"
 						viewBox="0 0 24 24"
 						fill="none"
 						stroke="currentColor"
@@ -40,10 +41,10 @@
 				<div class="text-3xl font-bold text-purple-600">{(data.badges ?? []).length}</div>
 			</div>
 
-			<div class="p-6 bg-white rounded-lg shadow-sm">
-				<div class="flex items-center mb-4 space-x-2">
+			<div class="rounded-lg bg-white p-6 shadow-sm">
+				<div class="mb-4 flex items-center space-x-2">
 					<svg
-						class="w-6 h-6 text-yellow-500"
+						class="h-6 w-6 text-yellow-500"
 						viewBox="0 0 24 24"
 						fill="none"
 						stroke="currentColor"
@@ -57,10 +58,10 @@
 				<p class="text-gray-600">Out of 100</p>
 			</div>
 
-			<div class="p-6 bg-white rounded-lg shadow-sm">
-				<div class="flex items-center mb-4 space-x-2">
+			<div class="rounded-lg bg-white p-6 shadow-sm">
+				<div class="mb-4 flex items-center space-x-2">
 					<svg
-						class="w-6 h-6 text-blue-500"
+						class="h-6 w-6 text-blue-500"
 						viewBox="0 0 24 24"
 						fill="none"
 						stroke="currentColor"
@@ -75,26 +76,25 @@
 			</div>
 		</div>
 
-		<!-- Performance Graph -->
-		<div class="p-6 bg-white rounded-lg shadow-sm">
+		<div class="rounded-lg bg-bg-2 p-6 shadow-sm">
 			<h3 class="mb-4 font-semibold">Presentation Performance</h3>
-			<div class="p-4 h-[300px]">
+			<div class="h-[300px] p-4">
 				<LineChart
 					data={data.scoreItems ?? []}
 					x="created_at"
 					y="score"
 					series={[{ key: 'score', color: '#8b5cf6' }]}
 					props={{
-						grid: { class: 'stroke-gray-200 stroke-1' },
+						grid: { class: 'stroke-text-3/20 stroke-1' },
 						xAxis: {
-							class: 'fill-gray-600'
+							class: 'fill-text-3'
 						},
 						yAxis: {
-							class: 'fill-gray-600'
+							class: 'fill-text-3'
 						},
 						tooltip: {
 							root: {
-								class: 'bg-white border border-gray-200 shadow-sm rounded p-2 text-sm text-gray-600'
+								class: 'bg-bg-2 border text-text-3'
 							}
 						}
 					}}
@@ -107,29 +107,18 @@
 		</div>
 
 		<!-- Badges Section -->
-		<div class="p-6 bg-white rounded-lg shadow-sm">
+		<div class="rounded-lg bg-white p-6 shadow-sm">
 			<h3 class="mb-4 font-semibold">Earned Badges</h3>
 			<div class="grid grid-cols-2 gap-4 md:grid-cols-5">
 				{#each data.badges ?? [] as badge}
 					<div
-						class="flex flex-col items-center p-4 bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg transition-colors hover:from-purple-100 hover:to-blue-100"
+						class="flex flex-col items-center rounded-lg bg-gradient-to-br from-purple-50 to-blue-50 p-4 transition-colors hover:from-purple-100 hover:to-blue-100"
 					>
 						<div class="mb-2 text-4xl">{badge.image_url}</div>
-						<div class="text-sm font-medium text-center text-gray-700">{badge.name}</div>
+						<div class="text-center text-sm font-medium text-gray-700">{badge.name}</div>
 					</div>
 				{/each}
 			</div>
 		</div>
 	</div>
 </div>
-
-<style>
-	:global(body) {
-		margin: 0;
-		font-family:
-			system-ui,
-			-apple-system,
-			sans-serif;
-	}
-</style>
-

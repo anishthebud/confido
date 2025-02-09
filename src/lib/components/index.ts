@@ -5,5 +5,6 @@ export { default as FeatureCard } from './FeatureCard.svelte';
 export { default as Navbar } from './NavBar.svelte';
 export { default as SideBar } from './SideBar.svelte';
 export { default as Slide } from './Slide.svelte';
+export { default as AudioWave } from './AudioWave.svelte';
 export { default as BadgeAchievementPopup } from './ui/BadgeAchievementPopup.svelte';
 export { default as FeedbackPopup } from './ui/FeedbackPopup.svelte';

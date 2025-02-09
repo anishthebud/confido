@@ -4,6 +4,25 @@
 
 	let { data } = $props();
 	let recordings = $derived(data.recordings as unknown as Recording[] | null);
+
+	function calculateTotalScore(recording: Recording): number {
+		return Math.round(
+			(recording.question_score?.depth ?? 0) +
+				(recording.question_score?.clarity ?? 0) +
+				(recording.question_score?.relevance ?? 0) +
+				(recording.recording_score?.pacing ?? 0) +
+				(recording.recording_score?.clarity ?? 0) +
+				(recording.recording_score?.delivery ?? 0) +
+				((recording.recording_score?.engagement ?? 0) * 100) / 80
+		);
+	}
+
+	function getScoreColor(score: number): string {
+		console.log(score);
+		if (score < 33) return 'text-red-500';
+		if (score < 66) return 'text-yellow-500';
+		return 'text-green-500';
+	}
 </script>
 
 <div class="flex flex-col gap-y-6">
@@ -21,7 +40,7 @@
 						<th>Presentation Overall</th>
 						<th>Answer Scores</th>
 						<th>Answer Overall</th>
-						<th>Overall Score</th>
+						<th>Total Score</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -32,8 +51,8 @@
 						>
 							<td>{new Date(recording.created_at).toLocaleDateString()}</td>
 							<td
-								>{recording.recording_score?.pacing}/{recording.recording_score?.clarity}/{recording
-									.recording_score?.delivery}/{recording.recording_score?.engagement}</td
+								>{recording.recording_score?.pacing} | {recording.recording_score?.clarity} | {recording
+									.recording_score?.delivery} | {recording.recording_score?.engagement}</td
 							>
 							<td
 								>{recording.recording_score?.pacing +
@@ -42,7 +61,7 @@
 									recording.recording_score?.engagement}</td
 							>
 							<td
-								>{recording.question_score?.depth}/{recording.question_score?.clarity}/{recording
+								>{recording.question_score?.depth} | {recording.question_score?.clarity} | {recording
 									.question_score?.relevance}</td
 							>
 							<td
@@ -50,15 +69,8 @@
 									recording.question_score?.clarity +
 									recording.question_score?.relevance}</td
 							>
-							<td
-								>{recording.question_score?.depth +
-									recording.question_score?.clarity +
-									recording.question_score?.relevance +
-									recording.recording_score?.pacing +
-									recording.recording_score?.clarity +
-									recording.recording_score?.delivery +
-									recording.recording_score?.engagement +
-									20}%</td
+							<td class={getScoreColor(calculateTotalScore(recording))}
+								>{calculateTotalScore(recording)}%</td
 							>
 						</tr>
 						<tr
@@ -121,14 +133,15 @@
 									recording.question_score?.relevance}</td
 							>
 							<td
-								>{recording.question_score?.depth +
-									recording.question_score?.clarity +
-									recording.question_score?.relevance +
-									recording.recording_score?.pacing +
-									recording.recording_score?.clarity +
-									recording.recording_score?.delivery +
-									recording.recording_score?.engagement +
-									20}%</td
+								>{Math.round(
+									recording.question_score?.depth +
+										recording.question_score?.clarity +
+										recording.question_score?.relevance +
+										recording.recording_score?.pacing +
+										recording.recording_score?.clarity +
+										recording.recording_score?.delivery +
+										(recording.recording_score?.engagement * 100) / 80
+								)}%</td
 							>
 						</tr>
 					{/each}

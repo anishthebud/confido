@@ -5,6 +5,7 @@
 	import Fa from 'svelte-fa';
 	import type { PageProps } from './$types.js';
 	import { enhance } from '$app/forms';
+	import { AudioWave } from '$lib/components/';
 
 	let { data }: PageProps = $props();
 	let presentation = $derived(data.presentation);
@@ -13,10 +14,12 @@
 
 	let media = $state([] as Blob[]);
 	let mediaRecorder: MediaRecorder | null = null;
+	let audioStream: MediaStream | null = $state(null);
+
 	onMount(async () => {
 		try {
-			const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-			mediaRecorder = new MediaRecorder(stream);
+			audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+			mediaRecorder = new MediaRecorder(audioStream);
 			mediaRecorder.ondataavailable = (e) => {
 				if (e.data && e.data.size > 0) {
 					media.push(e.data);
@@ -29,7 +32,6 @@
 
 	let isRecording = $state(false);
 	function handleToggleRecording(e: any) {
-		console.log(e);
 		if (!mediaRecorder) {
 			return;
 		}
@@ -58,7 +60,7 @@
 					<h5>Slides</h5>
 					<button
 						onclick={() => (slideIndex = (slideIndex + 1) % presentation.slides.length)}
-						class="aspect-video h-[460px] cursor-pointer overflow-hidden rounded"
+						class="aspect-video h-[440px] cursor-pointer overflow-hidden rounded"
 					>
 						<Slide slide={presentation.slides[slideIndex]} />
 					</button>
@@ -78,49 +80,58 @@
 					</div>
 				</div>
 			</div>
-			<div class="flex flex-col gap-3">
-				<div class="w-full rounded border bg-bg-2 p-6">
-					<div class="flex flex-col gap-y-3">
-						<h5>Explanation</h5>
-						<p class="h-[600px] overflow-y-scroll">
-							{presentation.explanation}
-						</p>
-					</div>
+			<div class="w-full rounded border bg-bg-2 p-6">
+				<div class="flex flex-col gap-y-3">
+					<h5>Explanation</h5>
+					<p class="h-[560px] overflow-y-scroll">
+						{presentation.explanation}
+					</p>
 				</div>
-				<div class="rounded border bg-bg-2 p-3">
-					<form
-						method="post"
-						enctype="multipart/form-data"
-						use:enhance={({ formData }) => {
-							console.log(isRecording);
-							if (media.length === 0) return;
+			</div>
+		</div>
+		<div class="flex justify-between gap-4">
+			<div class="w-full rounded border bg-bg-2 p-3">
+				<AudioWave {audioStream} {isRecording} />
+			</div>
+			<div class=" w-1/4 min-w-64 rounded border bg-bg-2 p-3">
+				<form
+					method="post"
+					enctype="multipart/form-data"
+					use:enhance={({ formData }) => {
+						console.log(isRecording);
+						if (media.length === 0) return;
 
-							const audioBlob = new Blob(media, { type: 'audio/webm' });
-							const audioFile = new File([audioBlob], 'recording.webm');
+						const audioBlob = new Blob(media, { type: 'audio/webm' });
+						const audioFile = new File([audioBlob], 'recording.webm');
 
-							formData.append('audio', audioFile);
+						formData.append('audio', audioFile);
 
-							return async ({ update }) => {
-								media = [];
-								await update();
-							};
-						}}
-						class="flex w-full items-center justify-between"
+						return async ({ update }) => {
+							media = [];
+							await update();
+						};
+					}}
+					class="flex h-full w-full items-center justify-between gap-x-3"
+				>
+					<button
+						class="flex h-8 cursor-pointer items-center gap-x-2 rounded px-3 text-sm font-semibold text-white duration-200 {isRecording
+							? 'bg-red-500 hover:bg-red-400'
+							: 'bg-green-500 hover:bg-green-400'}"
+						onclick={handleToggleRecording}
+						type="button"
 					>
-						<button class="btn-secondary gap-2 px-3" onclick={handleToggleRecording} type="button">
-							<Fa icon={faMicrophone} />
-							{isRecording ? 'End Recording' : 'Start Recording'}
-						</button>
+						<Fa icon={faMicrophone} />
+						{isRecording ? 'End Recording' : 'Start Recording'}
+					</button>
 
-						<button
-							class="h-8 rounded border-2 border-green-600 bg-green-500 px-3 text-white"
-							type="submit"
-							disabled={media.length === 0 && !isRecording}
-						>
-							Submit
-						</button>
-					</form>
-				</div>
+					<button
+						class="btn-secondary px-3"
+						type="submit"
+						disabled={media.length == 0 || isRecording}
+					>
+						Submit
+					</button>
+				</form>
 			</div>
 		</div>
 	</div>
